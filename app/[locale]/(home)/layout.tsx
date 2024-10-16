@@ -1,5 +1,5 @@
 "use client"
-import { Home, CalendarSearch, SearchSlash, User } from "lucide-react";
+import { Home, CalendarSearch, SearchSlash, User,CreditCard } from "lucide-react";
 import { Button } from "@nextui-org/button";
 import { useTranslations } from "next-intl";
 import Link from "next/link"; // Import Next.js Link component
@@ -11,7 +11,7 @@ export default function Layout({ children }: { children: React.ReactNode }) {
   const t = useTranslations();
   const menuItems = [
     { icon: Home, label: t("홈"), href: "/" },
-    { icon: SearchSlash, label: t("검색"), href: "/search" },
+    { icon: CreditCard, label: t("콜렉션"), href: "/collection2" },
     { icon: User, label: t("마이페이지"), href: "/mypage" },
   ];
 
