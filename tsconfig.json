@@ -33,6 +33,6 @@
     "**/*.tsx",
     ".next/types/**/*.ts",
     "components/nextui"
-  ],
+, "components/CardComponent.js"  ],
   "exclude": ["node_modules"]
 }

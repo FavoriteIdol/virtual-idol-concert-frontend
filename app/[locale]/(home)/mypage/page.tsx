@@ -63,6 +63,7 @@ export default function MyPage({ params }: MyPageProps) {
     { id: 5, name: t("이세계 아이돌 콘서트: 소라"), date: "2024-11-15", imageUrl: "https://via.placeholder.com/300x150" },
     { id: 6, name: t("버추얼 DJ 나이트: 카가미 하야토"), date: "2024-12-25", imageUrl: "https://via.placeholder.com/300x150" },
     { id: 7, name: t("VTuber Awards: 마츠리 페스티벌"), date: "2024-09-30", imageUrl: "https://via.placeholder.com/300x150" },
+    { id: 8, name: t("VTuber Awards: 마츠리 페스티벌"), date: "2024-09-30", imageUrl: "https://via.placeholder.com/300x150" },
   ];
 
   return (
@@ -93,12 +94,12 @@ export default function MyPage({ params }: MyPageProps) {
                   </div>
                 </CardBody>
               </Card>
-
+         
             {/* 보유 티켓 카드 그룹화 */}
             <Card>
               <CardBody className="p-4">
-                <h2 className="font-bold text-lg mb-4">{t('보유 티켓')}</h2>
-                {tickets.slice(0, isOwner ? 7 : tickets.length).map((ticket) => (
+                <h2 className="font-bold text-lg mb-4">{t('관람 이력')}</h2>
+                {tickets.slice(0, isOwner ? 3 : tickets.length).map((ticket) => (
                   <div key={ticket.id} className="flex items-center mb-4">
                     <Image
                       src={ticket.imageUrl}
@@ -115,7 +116,7 @@ export default function MyPage({ params }: MyPageProps) {
                   </div>
                 ))}
                 {/* 티켓이 3개 초과일 때만 더보기 버튼 표시 (자신의 페이지일 경우에만 표시) */}
-                {isOwner && tickets.length > 7 && (
+                {isOwner && tickets.length > 3 && (
                   <Button className="bg-green-500 hover:bg-green-600 text-white w-full" onClick={() => router.push("/tickets")}>
                     {t("더보기")}
                   </Button>

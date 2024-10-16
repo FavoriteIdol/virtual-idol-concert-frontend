@@ -1,5 +1,5 @@
 "use client"
-import { Home, CalendarSearch, SearchSlash, User } from "lucide-react";
+import { Home, CalendarSearch, SearchSlash, User,CreditCard } from "lucide-react";
 import { Button } from "@nextui-org/button";
 import { useTranslations } from "next-intl";
 import AccountNavItem from "@/components/AccountNavItem";
@@ -10,7 +10,7 @@ export default function Layout({ children }: { children: React.ReactNode }) {
   const t = useTranslations();
   const menuItems = [
     { icon: Home, label: t("홈") },
-    { icon: SearchSlash, label: t("검색") },
+    { icon: CreditCard, label: t("콜렉션") },
     { icon: User, label: t("마이페이지") },
   ];
 
