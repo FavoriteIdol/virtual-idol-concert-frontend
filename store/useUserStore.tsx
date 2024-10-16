@@ -47,7 +47,7 @@ const useUserStore = create<UserStore>()(
         },
       }),
       {
-        name: 'user-storage',
+        name: 'user-storage-for-virtual',
         partialize: (state) => ({ userInfo: state.userInfo }),
         onRehydrateStorage: () => (state) => {
           console.log("rehydrate success");
@@ -55,7 +55,7 @@ const useUserStore = create<UserStore>()(
         },
       }
     ),
-    { name: 'UserStore' }
+    { name: 'UserStore2' }
   )
 );
 

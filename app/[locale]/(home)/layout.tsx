@@ -2,6 +2,7 @@
 import { Home, CalendarSearch, SearchSlash, User } from "lucide-react";
 import { Button } from "@nextui-org/button";
 import { useTranslations } from "next-intl";
+import Link from "next/link"; // Import Next.js Link component
 import AccountNavItem from "@/components/AccountNavItem";
 import { Toaster } from "react-hot-toast";
 import TanstackQueryProvider from "@/components/TanstackQueryProvider";
@@ -9,9 +10,9 @@ import TanstackQueryProvider from "@/components/TanstackQueryProvider";
 export default function Layout({ children }: { children: React.ReactNode }) {
   const t = useTranslations();
   const menuItems = [
-    { icon: Home, label: t("홈") },
-    { icon: SearchSlash, label: t("검색") },
-    { icon: User, label: t("마이페이지") },
+    { icon: Home, label: t("홈"), href: "/" },
+    { icon: SearchSlash, label: t("검색"), href: "/search" },
+    { icon: User, label: t("마이페이지"), href: "/mypage" },
   ];
 
   return (
@@ -19,34 +20,34 @@ export default function Layout({ children }: { children: React.ReactNode }) {
       {/* 데스크탑용 Navbar */}
       <aside className="hidden md:block md:col-span-2 lg:col-span-3 p-4 border-r h-screen">
         <nav className="space-y-4">
-
           {menuItems.map((item, index) => (
-            <Button
-              key={index}
-              variant="light"
-              className="justify-start w-full text-left"
-            >
-              <item.icon className="w-6 h-6 mr-2" />
-              {item.label}
-            </Button>
+            <Link key={index} href={item.href}>
+              <Button
+                variant="light"
+                className="justify-start w-full text-left"
+              >
+                <item.icon className="w-6 h-6 mr-2" />
+                {item.label}
+              </Button>
+            </Link>
           ))}
         </nav>
       </aside>
 
       {/* 메인 컨텐츠 영역 */}
       <main className="col-span-1 md:col-span-8 lg:col-span-6">
-      <Toaster />
-      <TanstackQueryProvider>
-        {children}
+        <Toaster />
+        <TanstackQueryProvider>
+          {children}
         </TanstackQueryProvider>
       </main>
 
       {/* 광고 영역 (데스크탑에서만 표시) */}
       <aside className="hidden md:block md:col-span-2 lg:col-span-3 p-4 border-l h-screen">
-                  {/* User Profile or Login (데스크탑에서만 보임) */}
-                  <div className="hidden md:block">
-            <AccountNavItem />
-          </div>
+        {/* User Profile or Login (데스크탑에서만 보임) */}
+        <div className="hidden md:block">
+          <AccountNavItem />
+        </div>
         {/* <div className="h-full space-y-4">
           <div className="bg-gray-200 md:h-32 lg:h-48 flex items-center justify-center">
             <span className="text-gray-500">광고 배너 1</span>
@@ -61,10 +62,12 @@ export default function Layout({ children }: { children: React.ReactNode }) {
       <footer className="fixed bottom-0 z-20 w-full border-t md:hidden">
         <div className="flex justify-around py-2 bg-white">
           {menuItems.map((item, index) => (
-            <Button key={index} variant="light" className="flex flex-col items-center">
-              <item.icon className="w-6 h-6" />
-              <span className="text-xs">{item.label}</span>
-            </Button>
+            <Link key={index} href={item.href}>
+              <Button variant="light" className="flex flex-col items-center">
+                <item.icon className="w-6 h-6" />
+                <span className="text-xs">{item.label}</span>
+              </Button>
+            </Link>
           ))}
         </div>
       </footer>

@@ -57,11 +57,7 @@ export default function LoginPage() {
     router.push("/");
   };
 
-  const handleGoogleLogin = () => {
-    router.push(
-      "https://master-of-prediction.shop:8081/oauth2/authorization/google"
-    );
-  };
+
 
   return (
     <main className="w-full border-x border-slate-200">

@@ -14,20 +14,20 @@ interface MyPageProps {
     id: string; // 동적 라우팅으로 받은 id
   };
 }
-const dummyUser = {
-  id: 1,
-  email: "john.doe@example.com",
-  displayName: "John Doe",
-  userName: "johndoe123",
-  age: 28,
-  gender: "Male",
-  authority: "USER",
-  location: "Seoul, South Korea",
-  token: "abc123456token",
-  birthday: "1995-04-15",
-  avatarUrl: "https://via.placeholder.com/150", // 아바타 더미 이미지 URL
-  tier: "Gold",
-};
+// const dummyUser = {
+//   id: 1,
+//   email: "john.doe@example.com",
+//   displayName: "John Doe",
+//   userName: "johndoe123",
+//   age: 28,
+//   gender: "Male",
+//   authority: "USER",
+//   location: "Seoul, South Korea",
+//   token: "abc123456token",
+//   birthday: "1995-04-15",
+//   avatarUrl: "https://via.placeholder.com/150", // 아바타 더미 이미지 URL
+//   tier: "Gold",
+// };
 
 export default function MyPage({ params }: MyPageProps) {
   const { id } = params;  // 동적 라우팅에서 가져온 id
@@ -35,10 +35,7 @@ export default function MyPage({ params }: MyPageProps) {
   const t = useTranslations();
   const {userInfo ,setUserInfo } = useUserStore(); // 로그인한 사용자 정보 가져오기
 
-  useEffect(() => {
-    // 더미 유저 정보를 상태로 설정
-    setUserInfo(dummyUser);
-  }, [setUserInfo]);
+
   // 자신의 페이지인지 확인
   // const isOwner = userInfo?.userId === id; // userInfo의 userId와 URL의 id 비교
   const isOwner = true; // userInfo의 userId와 URL의 id 비교

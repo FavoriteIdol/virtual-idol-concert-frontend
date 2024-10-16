@@ -4,7 +4,7 @@ import { Link } from "@nextui-org/link";
 import clsx from "clsx";
 import {getMessages} from 'next-intl/server';
 
-import { Providers } from "./providers";
+import { Providers } from "../components/providers";
 
 import { siteConfig } from "@/config/site";
 import { fontSans } from "@/config/fonts";
