@@ -8,6 +8,7 @@ import { useRouter } from "next/navigation";
 import { LayoutGroup } from "framer-motion";
 import { useTranslations } from 'next-intl';
 import Tilt from 'react-parallax-tilt';
+import apiClient from "@handler/fetch/client";
 interface MyPageProps {
   params: {
     id: string;
@@ -15,7 +16,7 @@ interface MyPageProps {
 }
 
 const dummyUser = {
-  id: 1,
+  id: 3,
   email: "john.doe@example.com",
   displayName: "John Doe",
   userName: "johndoe123",
@@ -23,19 +24,37 @@ const dummyUser = {
   gender: "Male",
   authority: "USER",
   location: "Seoul, South Korea",
-  token: "abc123456token",
+  token: undefined,
   birthday: "1995-04-15",
   avatarUrl: "https://via.placeholder.com/150",
   tier: "Gold",
 };
 export default function MyPage({ params }: MyPageProps) {
-  const { id } = params;
   const router = useRouter();
   const t = useTranslations();
   const { userInfo, setUserInfo } = useUserStore();
-
+  const [collections, setCollections] = useState<any[]>([]);
   useEffect(() => {
     setUserInfo(dummyUser);
+      const fetchCollections = async () => {
+        try {
+          const response = await apiClient.get(
+            `/collections/user/3`,
+            {
+              params: {
+                page: 0,
+                size: 10,
+              },
+            }
+          );
+          console.log(response.data)
+          setCollections(response.data.content); // 페이지네이션의 content 부분만 상태로 설정
+        } catch (error) {
+          console.error("Failed to fetch collections:", error);
+        }
+      };
+
+      fetchCollections();
   }, [setUserInfo]);
 
   const [selectedImageId, setSelectedImageId] = useState<string | null>(null);
@@ -134,21 +153,24 @@ const imageVariants = {
           <Card>
             <CardBody className="p-4 overflow-visible">
               <h2 className="font-bold text-lg mb-4">{t("콜렉션")}</h2>
-              {tickets.map((ticket) => {
-                const imageId = ticket.id.toString();
+              {collections.map((collection) => {
+                const imageId = collection.concertId.toString();
                 const isSelected = selectedImageId === imageId;
                 return (
                   <div
-                    key={ticket.id}
+                    key={collection.concertId}
                     className={`flex mb-4 ${
-                      isSelected ? "justify-center items-center" : "items-center"
+                      isSelected
+                        ? "justify-center items-center"
+                        : "items-center"
                     }`}
                   >
                     <motion.div
-                      layout // layout 속성 추가
-                      layoutId={`image-${ticket.id}`}
-                      onClick={() => handleImageClick(ticket.id.toString())}
-                      custom={imageStyles[imageId]}
+                      layout
+                      layoutId={`image-${collection.concertId}`}
+                      onClick={() =>
+                        handleImageClick(collection.concertId.toString())
+                      }
                       initial="initial"
                       animate={isSelected ? "selected" : "initial"}
                       variants={imageVariants}
@@ -158,27 +180,30 @@ const imageVariants = {
                         pointerEvents: "auto",
                         transformStyle: "preserve-3d",
                         backfaceVisibility: "hidden",
-                        // position: isSelected ? "fixed" : "relative",
-                        // width: isSelected ? "12rem" : "12rem",
                         height: isSelected ? "6rem" : "6rem",
-                        // transition: "all 0.5s ease",
                         zIndex: zIndexState[imageId] || 1,
                       }}
                       onMouseMove={(e) => handleMouseMove(e, imageId)}
                       onMouseOut={() => handleMouseOut(imageId)}
-                      className={`rounded-md cursor-pointer overflow-visible `}
+                      className="rounded-md cursor-pointer overflow-visible"
                     >
                       <motion.img
-                        src={ticket.imageUrl}
-                        alt={ticket.name}
+                        src={collection.concertImage}
+                        alt={collection.concertImage}
                         className="w-full h-full rounded-md object-cover"
                       />
                     </motion.div>
-                   
-                    { !isSelected &&  (
+
+                    {!isSelected && (
                       <div className="ml-4">
-                        <p className="font-bold text-lg">{ticket.name}</p>
-                        <p className="text-sm text-gray-500">{ticket.date}</p>
+                        <p className="font-bold text-lg">
+                          {collection.concertName}
+                        </p>
+                        <p className="text-sm text-gray-500">
+                          {new Date(
+                            collection.collectedDate
+                          ).toLocaleDateString()}
+                        </p>
                       </div>
                     )}
                   </div>

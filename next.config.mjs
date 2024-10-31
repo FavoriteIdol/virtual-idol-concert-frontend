@@ -3,7 +3,7 @@ import createNextIntlPlugin from 'next-intl/plugin';
 /** @type {import('next').NextConfig} */
 const nextConfig = {
   images: {
-    domains: ['nextui.org', 'via.placeholder.com'],
+    domains: ["nextui.org", "via.placeholder.com", "example.com"],
   },
 };
 

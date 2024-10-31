@@ -16,7 +16,7 @@ export default function DropdownNext() {
   return (
     <Dropdown>
       <DropdownTrigger>
-        <Button variant="bordered">
+        <Button variant="light">
           <EllipsisHorizontalIcon className="w-6 h-6" />  {/* Heroicons 아이콘 사용 */}
         </Button>
       </DropdownTrigger>
