@@ -32,17 +32,6 @@ export default function MyPage({ params }: MyPageProps) {
   const [viewHistory, setViewHistory] = useState<any[]>([]);
 
   useEffect(() => {
-    // 사용자 정보를 설정
-    setUserInfo({
-      id: parseInt(id, 10),
-      email: "john.doe@example.com",
-      displayName: "John Doe",
-      userName: "johndoe123",
-      authority: "USER",
-      location: "Seoul, South Korea",
-      avatarUrl: "https://via.placeholder.com/150",
-      tier: "Gold",
-    });
 
     // 관람 이력 데이터를 API에서 가져오기
     const fetchViewHistory = async () => {

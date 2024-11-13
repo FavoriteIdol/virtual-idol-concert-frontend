@@ -34,7 +34,7 @@ const AccountNavItem = () => {
     );
   }
   // userInfo가 null이 아닌 경우 데이터 사용
-  const { userName, avatarUrl, tier, displayName } = userInfo;
+  const { userName,displayName,userId ,userImg} = userInfo;
   // 권한이나 티어에 따라 사용자 티어 설정 (기본 값은 '회원')
 
   return (
@@ -42,17 +42,17 @@ const AccountNavItem = () => {
       <div className="flex items-center gap-x-3 flex-1">
         <div className="flex flex-1 xl:flex-none justify-center xl:justify-start">
           <Avatar
-            src={avatarUrl } // 사용자 이미지가 없으면 기본 이미지 사용
+            src={userImg} // 사용자 이미지가 없으면 기본 이미지 사용
             alt={userName || "사용자"}
-            initials={userName ? userName[0].toUpperCase() : "U"} // 이름의 첫 글자 표시
+            initials={userName ? userName[0] : "U"} // 이름의 첫 글자 표시
           />
         </div>
 
         <div className="hidden sm:flex flex-col">
-    
-
-          <p className="text-base font-semibold">{displayName || userName }</p>
-          <p className="text-sm text-slate-600 font-medium">@{userName || "username"}</p>
+          <p className="text-base font-semibold">{displayName || userName}</p>
+          <p className="text-sm text-slate-600 font-medium">
+            @{userId || "username"}
+          </p>
         </div>
       </div>
 

@@ -6,12 +6,14 @@ import Link from "next/link"; // Import Next.js Link component
 import AccountNavItem from "@/components/AccountNavItem";
 import { Toaster } from "react-hot-toast";
 import TanstackQueryProvider from "@/components/TanstackQueryProvider";
+import useUserStore from "@store/useUserStore";
 
 export default function Layout({ children }: { children: React.ReactNode }) {
   const t = useTranslations();
+  const userInfo = useUserStore(state => state.userInfo)
   const menuItems = [
     { icon: Home, label: t("홈"), href: "/" },
-    { icon: CreditCard, label: t("콜렉션"), href: "/collection2" },
+    { icon: CreditCard, label: t("콜렉션"), href: `/collection2/${userInfo?.userId}` },
     { icon: User, label: t("마이페이지"), href: "/mypage" },
   ];
 

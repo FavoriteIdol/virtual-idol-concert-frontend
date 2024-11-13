@@ -20,7 +20,7 @@ const Account = ({ userName, avatarUrl, displayName, tier,className }: AccountPr
           <Avatar
             src={avatarUrl || undefined} // 사용자 이미지가 없으면 기본 이미지를 사용하지 않음
             alt={userName || "사용자"}
-            initials={userName ? userName[0].toUpperCase() : "U"} // 이름의 첫 글자 표시
+            initials={userName ? userName[0]: "U"} // 이름의 첫 글자 표시
           />
         </div>
 

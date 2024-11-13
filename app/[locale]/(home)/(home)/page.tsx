@@ -22,11 +22,12 @@ import Account from "@/components/Account";
 const fetchSearchResults = async (pageParam: number, queryKey: string[]) => {
   const response = await apiClient.get(`/search/user/displayName`, {
     params: {
-      q: queryKey[1],
+      displayName: queryKey[1],
       page: pageParam,
       size: 5,
     },
   });
+  console.log(response.data)
   return response.data;
 };
 
@@ -150,14 +151,13 @@ export default function HomeScreen() {
                   {page.content.map((result: any) => (
                     <Link
                       key={result.userId}
-                      href={`/channel/${result.user_id}`}
+                      href={`/collection2/${result.id}`}
                     >
                       <Account
                         className="px-2 py-2"
-                        userName={result.user_name}
-                        avatarUrl={result.avatar_img}
-                        displayName={result.display_name}
-                        tier={result.tier}
+                        userName={result.id}
+                        avatarUrl={result.userImg}
+                        displayName={result.userName}
                       />
                     </Link>
                   ))}
@@ -188,12 +188,12 @@ export default function HomeScreen() {
               ) : imminentStatus === "error" ? (
                 <p>Error: {imminentError.message}</p>
               ) : (
-                imminentPerformances?.map((performance:any) => (
+                imminentPerformances?.map((performance: any) => (
                   <SwiperSlide
                     key={performance.id}
-                    onClick={() =>
-                      router.push(`/performance/${performance.id}`)
-                    }
+                    // onClick={() =>
+                      // router.push(`/performance/${performance.id}`)
+                    // }
                   >
                     <Card className="h-[400px] relative w-full cursor-pointer">
                       <div className="absolute z-10 top-4 left-4 flex-col items-start">

@@ -4,18 +4,14 @@ import { persist, devtools } from 'zustand/middleware';
 
 // UserInfo 인터페이스 정의
 export interface UserInfo {
-  id?: number;
+  userId?: number;
   email?: string;
   displayName?: string;
   userName?: string;
-  age?: number;
-  gender?: string;
   authority?: string;
-  location?: string;
   token?: string;
   birthday?: string;
-  avatarUrl?: string ;
-  tier?: string;
+  userImg?: string ;
 }
 
 // UserStore 인터페이스 정의

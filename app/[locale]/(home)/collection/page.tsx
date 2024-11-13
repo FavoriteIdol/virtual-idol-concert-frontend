@@ -12,20 +12,6 @@ interface MyPageProps {
   };
 }
 
-const dummyUser = {
-  id: 1,
-  email: "john.doe@example.com",
-  displayName: "John Doe",
-  userName: "johndoe123",
-  age: 28,
-  gender: "Male",
-  authority: "USER",
-  location: "Seoul, South Korea",
-  token: "abc123456token",
-  birthday: "1995-04-15",
-  avatarUrl: "https://via.placeholder.com/150",
-  tier: "Gold",
-};
 
 export default function MyPage({ params }: MyPageProps) {
   const { id } = params;
@@ -33,9 +19,7 @@ export default function MyPage({ params }: MyPageProps) {
   const t = useTranslations();
   const { userInfo, setUserInfo } = useUserStore();
 
-  useEffect(() => {
-    setUserInfo(dummyUser);
-  }, [setUserInfo]);
+
 
   const isOwner = true;
   const [modalImage, setModalImage] = useState("");
