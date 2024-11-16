@@ -13,8 +13,8 @@ interface Performance {
   concertDate: string; // 공연 날짜
   startTime: string; // 공연 시작 시간
   ticketPrice: number; // 티켓 가격
-  stageName: string; // 무대 이름
-  stageImg?: string; // 무대 이미지 URL
+  concertName: string; // 무대 이름
+  concertImg?: string; // 무대 이미지 URL
 }
 
 export const Calendar = () => {
@@ -254,9 +254,9 @@ export const Calendar = () => {
                   <div className="flex items-center justify-between">
                     <div className="flex-1 text-left">
                       <h4 className="font-bold text-sm">{performance.name}</h4>
-                      <p className="text-gray-600 text-sm">
-                        Stage: {performance.stageName}
-                      </p>
+                      {/* <p className="text-gray-600 text-sm">
+                        Stage: {performance.concertName}
+                      </p> */}
                       <p className="text-gray-500 text-sm">
                         {performance.startTime}
                       </p>
@@ -265,14 +265,14 @@ export const Calendar = () => {
                       </p>
                     </div>
                     <div className="w-16 h-16 relative ml-2 flex-shrink-0">
-                      {performance.stageImg &&
+                      {performance.concertImg && (
                         <Image
-                          src={performance.stageImg}
-                          alt={performance.stageName}
+                          src={performance.concertImg}
+                          alt={performance.concertName}
                           fill
                           className="object-cover rounded"
                         />
-                      }
+                      )}
                     </div>
                   </div>
                 </Card>

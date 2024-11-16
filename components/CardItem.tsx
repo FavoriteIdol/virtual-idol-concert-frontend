@@ -1,13 +1,19 @@
 import React, { CSSProperties, useEffect, useState } from "react";
-import { motion, useAnimation, useMotionValue, useTransform } from "framer-motion";
+import {
+  motion,
+  useAnimation,
+  useMotionValue,
+  useTransform,
+} from "framer-motion";
 
+// CollectionItem 타입을 CollectionDTO에 맞게 변경
 interface CollectionItem {
   concertId: number;
   concertImage: string;
   concertName: string;
-  concertDate: string;
-  concertTime: string;
   collectedDate: string;
+  artist: string;
+  audience: string;
 }
 
 interface CardItemProps {
@@ -16,9 +22,11 @@ interface CardItemProps {
   handleImageClick: (id: string) => void;
   zIndexState: { [key: string]: number };
 }
+
 const isMobile = () => {
   return window.innerWidth <= 768; // 768px 이하를 모바일로 간주
 };
+
 const CardItem: React.FC<CardItemProps> = ({
   collection,
   isSelected,
@@ -30,17 +38,15 @@ const CardItem: React.FC<CardItemProps> = ({
   const controls = useAnimation();
   const [isAnimating, setIsAnimating] = useState(false);
 
-  // useMotionValue 훅으로 rotateX와 rotateY를 관리합니다.
   const rotateX = useMotionValue(0);
   const rotateY = useMotionValue(0);
-  // 빛 반사 효과를 위한 투명도 설정
+
   const overlayOpacity = useTransform(
     [rotateX, rotateY],
     ([latestX, latestY]: any) => {
-      // 틸트 각도에 따라 투명도 계산 (예시: 각도가 커질수록 투명도 증가)
       const xOpacity = Math.abs(latestX) / 30;
       const yOpacity = Math.abs(latestY) / 30;
-      return Math.min(xOpacity + yOpacity, 0.6); // 최대 투명도 0.6으로 제한
+      return Math.min(xOpacity + yOpacity, 0.6);
     }
   );
 
@@ -50,10 +56,10 @@ const CardItem: React.FC<CardItemProps> = ({
       controls
         .start({
           scale: 1.5,
-          rotateY: [0, 360, 720],
+          rotateY: [0, 360],
           rotateX: [0, 15, -15, 10, -10, 0],
           rotateZ: [0, 5, -5, 5, -5, 0],
-          transition: { duration: 1.5, ease: "easeInOut" },
+          transition: { duration: 4, ease: "easeInOut" },
         })
         .then(() => {
           setIsAnimating(false);
@@ -73,11 +79,10 @@ const CardItem: React.FC<CardItemProps> = ({
     }
   }, [isSelected, controls]);
 
-  // 마우스 이동 핸들러에서 rotateX와 rotateY 값을 업데이트합니다.
   const handleMouseMove = (e: React.MouseEvent) => {
     const rect = e.currentTarget.getBoundingClientRect();
-    const x = e.clientX - rect.left; // 요소 내에서의 X 좌표
-    const y = e.clientY - rect.top; // 요소 내에서의 Y 좌표
+    const x = e.clientX - rect.left;
+    const y = e.clientY - rect.top;
     const newRotateY = (x / rect.width - 0.5) * 20;
     const newRotateX = (-(y / rect.height) + 0.5) * 20;
     rotateX.set(newRotateX);
@@ -104,29 +109,37 @@ const CardItem: React.FC<CardItemProps> = ({
       }}
     >
       <motion.div
-        onClick={() => handleImageClick(collection.concertId.toString())}
+        onClick={() => handleImageClick(imageId)}
         layout
         layoutId={`card-${imageId}`}
         animate={controls}
         style={{
-        width: isSelected ? (isMobile() ? "15rem" : "36rem") : (isMobile() ? "18rem" : "24rem"),
-        height: isSelected ? (isMobile() ? "7.5rem" : "18rem") : (isMobile() ? "10rem" : "12rem"),
+          width: isSelected
+            ? isMobile()
+              ? "16rem"
+              : "40rem"
+            : isMobile()
+            ? "24rem"
+            : "24rem",
+          height: isSelected
+            ? isMobile()
+              ? "7rem"
+              : "13rem"
+            : isMobile()
+            ? "10rem"
+            : "10rem",
           transformStyle: "preserve-3d",
           pointerEvents: isAnimating ? "none" : "auto",
           cursor: "pointer",
         }}
-        className="flex rounded-md overflow-visible"
+        className="flex overflow-visible"
       >
-        {/* 내부 motion.div를 추가하여 틸트 효과를 관리합니다. */}
         <motion.div
           style={{
             width: "100%",
             height: "100%",
             transformStyle: "preserve-3d",
             rotateX: rotateX,
-            backgroundColor: "white",
-            boxShadow: "0 10px 20px rgba(0, 0, 0, 0.3)",
-            borderRadius: "1rem",
             rotateY: rotateY,
           }}
           onMouseMove={(e) => {
@@ -143,38 +156,27 @@ const CardItem: React.FC<CardItemProps> = ({
               position: "absolute",
               width: "100%",
               height: "100%",
-              overflow: "hidden",
-              borderRadius: "1rem",
             }}
           >
-            {/* 앞면 콘텐츠 */}
-            <div className="flex w-full h-full">
-              <div className="w-3/4 relative">
+            <div className="font-GangwonEduPowerExtraBoldA flex w-full h-full relative">
+              <div className="w-full h-full shadow-lg">
                 <img
                   src={collection.concertImage}
-                  alt={collection.concertImage}
-                  className="w-full h-full bg-slate-400 rounded-md object-cover"
+                  alt={collection.concertName}
+                  className="w-full h-full bg-transparent rounded-md object-cover shadow-lg"
                 />
               </div>
-              <div className="w-1/4 p-4 flex flex-col justify-between">
-                <div>
-                  <h3 className="text-sm font-bold">
-                    {collection.concertName}
-                  </h3>
-                  {/* <p className="text-gray-600">{collection.concertDate}</p> */}
-                  {/* <p className="text-gray-600">{collection.concertTime}</p> */}
-                </div>
-                <div>
-                  <p className="text-gray-500 text-xs whitespace-nowrap">
-                    {collectedDate}
-                  </p>
-                  <p className="text-gray-500 text-xs whitespace-nowrap">
-                    {collectedTime}
-                  </p>
-                </div>
+              <div className="absolute bottom-0 right-5 leading-tight text-stroke overflow-hidden text-ellipsis whitespace-nowrap">
+                <p className="leading-tight font-bold text-medium">
+                  {collection.concertName.split('"')[0]}
+                </p>
+                <p className="leading-tight text-medium">
+                  "{collection.concertName.split('"')[1]}"
+                </p>
               </div>
             </div>
           </div>
+
           {/* 빛 반사 오버레이 */}
           <motion.div
             style={{
@@ -189,6 +191,7 @@ const CardItem: React.FC<CardItemProps> = ({
               borderRadius: "1rem",
             }}
           />
+
           {/* 뒷면 */}
           <div
             style={{
@@ -197,18 +200,40 @@ const CardItem: React.FC<CardItemProps> = ({
               width: "100%",
               height: "100%",
               transform: "rotateY(180deg)",
-              overflow: "hidden",
-              borderRadius: "1rem",
               backgroundColor: "white",
-              color: "black",
               display: "flex",
               alignItems: "center",
               justifyContent: "center",
             }}
           >
-            {/* 뒷면 콘텐츠 */}
-            <div className="flex items-center justify-center w-full h-full bg-white rounded-md shadow-md">
-              <p className="text-lg font-bold">추가 정보 또는 이미지</p>
+            <div className="font-nanum relative flex items-center justify-center w-full h-full bg-slate-600 rounded-md shadow-md">
+              <img
+                src={collection.concertImage}
+                alt={collection.concertName}
+                className="w-full h-full bg-slate-400 rounded-md object-cover"
+              />
+              <div className="absolute inset-0 bg-black opacity-70 rounded-md"></div>
+              <div className="absolute inset-0 grid grid-rows-3 grid-cols-4 p-4 border-2 border-white rounded-md">
+                <div className="col-span-4 flex items-center justify-start border border-white p-2 overflow-hidden text-ellipsis whitespace-nowrap">
+                  <p className="text-white font-semibold">Title</p>
+                  <p className="text-white font-bold ml-2">
+                    {collection.concertName}
+                  </p>
+                </div>
+                <div className="col-span-2 row-span-2 flex flex-col items-start justify-center border border-white p-2 overflow-hidden text-ellipsis whitespace-nowrap">
+                  <p className="text-white font-semibold">Date</p>
+                  <p className="text-white font-bold">{collectedDate}</p>
+                  <p className="text-white font-bold">{collectedTime}</p>
+                </div>
+                <div className="col-span-2 row-start-2 flex flex-col items-start justify-center border border-white p-2 overflow-hidden text-ellipsis whitespace-nowrap">
+                  <p className="text-white font-semibold">Artist</p>
+                  <p className="text-white font-bold">{collection.artist}</p>
+                </div>
+                <div className="col-span-2 row-start-3 flex flex-col items-start border border-white justify-center p-2 overflow-hidden text-ellipsis whitespace-nowrap">
+                  <p className="text-white font-semibold">Audience</p>
+                  <p className="text-white font-bold">{collection.audience}</p>
+                </div>
+              </div>
             </div>
           </div>
         </motion.div>

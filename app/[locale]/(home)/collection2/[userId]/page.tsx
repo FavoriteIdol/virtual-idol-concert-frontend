@@ -72,6 +72,8 @@ export default function MyPage({ params }: MyPageProps) {
 
   useEffect(() => {
     const fetchCollections = async () => {
+      if (!params.userId) return; // userId가 없으면 함수 종료
+
       try {
         const response = await apiClient.get(
           `/collections/user/${params.userId}`,
@@ -84,14 +86,14 @@ export default function MyPage({ params }: MyPageProps) {
         );
         console.log(response.data);
         setCollections(response.data.content); // 페이지네이션의 content 부분만 상태로 설정
-      // setCollections(dummyData.content);
+        // setCollections(dummyData.content);
       } catch (error) {
         console.error("Failed to fetch collections:", error);
       }
     };
 
     fetchCollections();
-  }, [setUserInfo]);
+  }, [params.userId, setCollections]); // userId가 변경될 때만 useEffect 재실행
 
   const [selectedImageId, setSelectedImageId] = useState<string | null>(null);
   const [imageStyles, setImageStyles] = useState<{
@@ -156,7 +158,10 @@ export default function MyPage({ params }: MyPageProps) {
           style={{ overflow: "visible", position: "relative" }} // 부모 컨테이너의 overflow를 visible로 설정
         >
           <Card style={{ overflow: "visible", position: "relative" }}>
-            <CardBody className="p-4" style={{ overflow: "visible", position: "relative" }}>
+            <CardBody
+              className="p-4"
+              style={{ overflow: "visible", position: "relative" }}
+            >
               <h2 className="font-bold text-lg mb-4">{t("콜렉션")}</h2>
               {collections.map((collection) => {
                 const imageId = collection.concertId.toString();

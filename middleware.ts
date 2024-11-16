@@ -10,5 +10,5 @@ export default createMiddleware({
 
 export const config = {
   // 모든 경로에서 로케일이 누락된 경우 로케일을 추가하기 위한 설정
-  matcher: ['/((?!_next|favicon.ico|api|images).*)'],
+  matcher: ['/((?!_next|favicon.ico|api|images|fonts|styles).*)'],
 };

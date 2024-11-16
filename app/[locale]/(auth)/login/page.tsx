@@ -64,7 +64,7 @@ export default function LoginPage() {
       <section className="flex flex-col items-center w-full h-screen md:flex-row">
         <div className="relative hidden h-full bg-blue-600 lg:block lg:w-1/2 xl:w-2/3">
           <Image
-            src="/images/login-bg.webp"
+            src="/images/login-bg.gif"
             alt="Background Image"
             className="object-cover w-full h-full"
             layout="fill" // 또는 width와 height를 지정하세요.

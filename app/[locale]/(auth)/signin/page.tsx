@@ -86,7 +86,7 @@ export default function SignInPage() {
       <section className="flex flex-col items-center w-full h-screen md:flex-row">
         <div className="relative hidden h-full bg-blue-600 lg:block lg:w-1/2 xl:w-2/3">
           <Image
-            src="/images/login-bg.webp"
+            src="/images/login-bg.gif"
             alt="Background Image"
             className="object-cover w-full h-full"
             layout="fill" // or specify width and height

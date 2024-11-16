@@ -1,7 +1,6 @@
 import Avatar from '@/components/Avatar';
 import Link from 'next/link';
 import { EllipsisHorizontalIcon } from '@heroicons/react/24/outline';  // Heroicons에서 아이콘 가져오기
-import DropdownNext from '@ui/DropdownAccountNavItem';
 import useUserStore from '@store/useUserStore';
 
 interface AccountProps {

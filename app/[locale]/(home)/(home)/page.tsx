@@ -207,7 +207,7 @@ export default function HomeScreen() {
                           {performance.name}
                         </h4>
                         <p className="text-sm text-white/80 mt-1">
-                          {performance.stageName}
+                          {performance.concertName}
                         </p>
                       </div>
                       <div className="relative w-full h-full bg-slate-500">
@@ -215,7 +215,7 @@ export default function HomeScreen() {
                         {/* 검정색 배경으로 설정 */}
                         <Image
                           alt={`Image for ${performance.name}`}
-                          src={performance.stageImg}
+                          src={performance.concertImg}
                           fill
                           className="object-cover w-full h-full"
                           onError={(e) =>

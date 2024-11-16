@@ -85,7 +85,7 @@ const imminentPerformances = [
 
           {/* 캘린더 컴포넌트 추가 */}
           <section className="mt-8">
-            <Calendar performances={imminentPerformances} />
+            <Calendar />
           </section>
         </main>
       </div>

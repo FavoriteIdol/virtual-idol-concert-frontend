@@ -1,5 +1,5 @@
-"use client"
-import { Home, CalendarSearch, SearchSlash, User,CreditCard } from "lucide-react";
+"use client";
+import { Home, CreditCard, User } from "lucide-react";
 import { Button } from "@nextui-org/button";
 import { useTranslations } from "next-intl";
 import Link from "next/link"; // Import Next.js Link component
@@ -10,11 +10,21 @@ import useUserStore from "@store/useUserStore";
 
 export default function Layout({ children }: { children: React.ReactNode }) {
   const t = useTranslations();
-  const userInfo = useUserStore(state => state.userInfo)
+  const userInfo = useUserStore((state) => state.userInfo);
+
+  // userId가 있는 경우에만 콜렉션과 마이페이지 추가
   const menuItems = [
     { icon: Home, label: t("홈"), href: "/" },
-    { icon: CreditCard, label: t("콜렉션"), href: `/collection2/${userInfo?.userId}` },
-    { icon: User, label: t("마이페이지"), href: "/mypage" },
+    ...(userInfo?.userId
+      ? [
+          {
+            icon: CreditCard,
+            label: t("콜렉션"),
+            href: `/collection2/${userInfo.userId}`,
+          },
+          { icon: User, label: t("마이페이지"), href: "/mypage" },
+        ]
+      : []),
   ];
 
   return (
@@ -39,25 +49,14 @@ export default function Layout({ children }: { children: React.ReactNode }) {
       {/* 메인 컨텐츠 영역 */}
       <main className="col-span-1 md:col-span-8 lg:col-span-6">
         <Toaster />
-        <TanstackQueryProvider>
-          {children}
-        </TanstackQueryProvider>
+        <TanstackQueryProvider>{children}</TanstackQueryProvider>
       </main>
 
       {/* 광고 영역 (데스크탑에서만 표시) */}
       <aside className="hidden md:block md:col-span-2 lg:col-span-3 p-4 border-l h-screen">
-        {/* User Profile or Login (데스크탑에서만 보임) */}
         <div className="hidden md:block">
           <AccountNavItem />
         </div>
-        {/* <div className="h-full space-y-4">
-          <div className="bg-gray-200 md:h-32 lg:h-48 flex items-center justify-center">
-            <span className="text-gray-500">광고 배너 1</span>
-          </div>
-          <div className="bg-gray-200 md:h-32 lg:h-48 flex items-center justify-center">
-            <span className="text-gray-500">광고 배너 2</span>
-          </div>
-        </div> */}
       </aside>
 
       {/* 모바일용 Footer */}
