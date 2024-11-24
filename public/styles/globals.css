@@ -5,8 +5,9 @@
 @font-face {
     font-family: 'GangwonEduPowerExtraBoldA';
     src: url('https://fastly.jsdelivr.net/gh/projectnoonnu/noonfonts_2201-2@1.0/GangwonEduPowerExtraBoldA.woff') format('woff');
-    font-weight: normal;
+    font-weight: 700;
     font-style: normal;
+    font-size: 20px;
 }
 @import url('https://cdn.rawgit.com/moonspam/NanumSquare/master/nanumsquare.css');
 

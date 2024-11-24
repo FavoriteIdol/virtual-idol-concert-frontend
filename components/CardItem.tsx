@@ -7,7 +7,7 @@ import {
 } from "framer-motion";
 
 // CollectionItem 타입을 CollectionDTO에 맞게 변경
-interface CollectionItem {
+export interface CollectionItem {
   concertId: number;
   concertImage: string;
   concertName: string;
@@ -59,7 +59,7 @@ const CardItem: React.FC<CardItemProps> = ({
           rotateY: [0, 360],
           rotateX: [0, 15, -15, 10, -10, 0],
           rotateZ: [0, 5, -5, 5, -5, 0],
-          transition: { duration: 4, ease: "easeInOut" },
+          transition: { duration: 1, ease: "easeInOut" },
         })
         .then(() => {
           setIsAnimating(false);
@@ -158,7 +158,7 @@ const CardItem: React.FC<CardItemProps> = ({
               height: "100%",
             }}
           >
-            <div className="font-GangwonEduPowerExtraBoldA flex w-full h-full relative">
+            <div className="font-GangwonEduPowerExtraBoldA font-extrabold flex w-full h-full relative">
               <div className="w-full h-full shadow-lg">
                 <img
                   src={collection.concertImage}
@@ -167,7 +167,7 @@ const CardItem: React.FC<CardItemProps> = ({
                 />
               </div>
               <div className="absolute bottom-0 right-5 leading-tight text-stroke overflow-hidden text-ellipsis whitespace-nowrap">
-                <p className="leading-tight font-bold text-medium">
+                <p className="leading-tight font-extrabold text-medium">
                   {collection.concertName.split('"')[0]}
                 </p>
                 <p className="leading-tight text-medium">
@@ -216,22 +216,30 @@ const CardItem: React.FC<CardItemProps> = ({
               <div className="absolute inset-0 grid grid-rows-3 grid-cols-4 p-4 border-2 border-white rounded-md">
                 <div className="col-span-4 flex items-center justify-start border border-white p-2 overflow-hidden text-ellipsis whitespace-nowrap">
                   <p className="text-white font-semibold">Title</p>
-                  <p className="text-white font-bold ml-2">
+                  <p className="text-white font-bold ml-2 font-GangwonEduPowerExtraBoldA">
                     {collection.concertName}
                   </p>
                 </div>
                 <div className="col-span-2 row-span-2 flex flex-col items-start justify-center border border-white p-2 overflow-hidden text-ellipsis whitespace-nowrap">
                   <p className="text-white font-semibold">Date</p>
-                  <p className="text-white font-bold">{collectedDate}</p>
-                  <p className="text-white font-bold">{collectedTime}</p>
+                  <p className="text-white font-bold font-GangwonEduPowerExtraBoldA">
+                    {collectedDate}
+                  </p>
+                  <p className="text-white font-bold font-GangwonEduPowerExtraBoldA">
+                    {collectedTime}
+                  </p>
                 </div>
                 <div className="col-span-2 row-start-2 flex flex-col items-start justify-center border border-white p-2 overflow-hidden text-ellipsis whitespace-nowrap">
                   <p className="text-white font-semibold">Artist</p>
-                  <p className="text-white font-bold">{collection.artist}</p>
+                  <p className="text-white font-bold font-GangwonEduPowerExtraBoldA">
+                    {collection.artist}
+                  </p>
                 </div>
                 <div className="col-span-2 row-start-3 flex flex-col items-start border border-white justify-center p-2 overflow-hidden text-ellipsis whitespace-nowrap">
                   <p className="text-white font-semibold">Audience</p>
-                  <p className="text-white font-bold">{collection.audience}</p>
+                  <p className="text-white font-bold font-GangwonEduPowerExtraBoldA">
+                    {collection.audience}
+                  </p>
                 </div>
               </div>
             </div>

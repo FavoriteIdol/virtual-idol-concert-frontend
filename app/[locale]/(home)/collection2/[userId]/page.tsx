@@ -6,7 +6,7 @@ import useUserStore from "@store/useUserStore";
 import { useRouter } from "next/navigation";
 import { useTranslations } from "next-intl";
 import apiClient from "@handler/fetch/client";
-import CardItem from "@/components/CardItem";
+import CardItem, { CollectionItem } from "@/components/CardItem";
 
 interface MyPageProps {
   params: {
@@ -14,12 +14,7 @@ interface MyPageProps {
   };
 }
 
-interface CollectionItem {
-  concertId: number;
-  concertImage: string;
-  concertName: string;
-  collectedDate: string;
-}
+
 // dummyData.ts
 export interface PaginatedCollection {
   totalPages: number;
@@ -32,36 +27,6 @@ export interface PaginatedCollection {
   first: boolean;
   empty: boolean;
 }
- const dummyData: PaginatedCollection = {
-  totalPages: 1,
-  totalElements: 3,
-  size: 10,
-  content: [
-    {
-      collectedDate: "2024-11-11T10:24:00.603037",
-      concertId: 16,
-      concertImage: "http://example.com/concertB.jpg",
-      concertName: "Virtual Concert B",
-    },
-    {
-      collectedDate: "2024-11-11T15:16:38.413406",
-      concertId: 18,
-      concertImage: "http://example.com/concertB.jpg",
-      concertName: "Virtual Concert B",
-    },
-    {
-      collectedDate: "2024-11-11T15:43:36.66194",
-      concertId: 20,
-      concertImage: "http://example.com/concertC.jpg",
-      concertName: "Virtual Concert C",
-    },
-  ],
-  number: 0,
-  numberOfElements: 3,
-  last: true,
-  first: true,
-  empty: false,
-};
 
 
 export default function MyPage({ params }: MyPageProps) {
