@@ -119,8 +119,8 @@ export default function HomeScreen() {
     <>
       <main className="col-span-5 w-full border-x border-slate-200">
         {/* 검색 상태에 따라 헤더와 검색창 고정 */}
-        <div className="bg-white p-4 sticky top-0 z-10 shadow-sm  md:col-span-12 text-xl font-bold">
-          <Header title="로고" hide={!isHeaderVisible}>
+        <div className="bg-white  sticky top-0 z-10 shadow-sm  md:col-span-12 text-xl font-bold">
+          <Header title="로고"  hide={!isHeaderVisible}>
             <Search
               onSearchToggle={handleSearchToggle}
               onInput={setSearchQuery}

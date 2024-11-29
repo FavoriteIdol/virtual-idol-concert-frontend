@@ -34,7 +34,7 @@ export default function MyPage({ params }: MyPageProps) {
   const t = useTranslations();
   const { userInfo, setUserInfo } = useUserStore();
   const [collections, setCollections] = useState<CollectionItem[]>([]);
-
+ const [isFlipped, setIsFlipped] = useState(false);
   useEffect(() => {
     const fetchCollections = async () => {
       if (!params.userId) return; // userId가 없으면 함수 종료
@@ -70,15 +70,21 @@ export default function MyPage({ params }: MyPageProps) {
     [key: string]: number;
   }>({});
 
+
   const handleImageClick = (id: string) => {
     const isCurrentlySelected = selectedImageId === id;
     if (isCurrentlySelected) {
-      // 이미지가 축소될 때
-      setSelectedImageId(null);
+      // 카드가 클릭되면 반바퀴 회전
+      setIsFlipped((prev) => !prev);
     } else {
-      // 이미지가 확대될 때
+      // 카드가 선택될 때
       setSelectedImageId(id);
+      setIsFlipped(false); // 선택 시 초기화
     }
+  };
+  const handleOverlayClick = () => {
+    setSelectedImageId(null);
+    setIsFlipped(false);
   };
 
   const handleMouseMove = (e: React.MouseEvent, imageId: string) => {
@@ -112,39 +118,71 @@ export default function MyPage({ params }: MyPageProps) {
     }));
   };
 
-  return (
-    <LayoutGroup>
-      <div
-        className="flex flex-col min-h-screen bg-gray-100"
-        style={{ overflow: "visible" }} // 부모 컨테이너의 overflow를 visible로 설정
-      >
-        <main
-          className="flex-grow p-4 space-y-4 pb-16"
-          style={{ overflow: "visible", position: "relative" }} // 부모 컨테이너의 overflow를 visible로 설정
-        >
-          <Card style={{ overflow: "visible", position: "relative" }}>
-            <CardBody
-              className="p-4"
-              style={{ overflow: "visible", position: "relative" }}
-            >
-              <h2 className="font-bold text-lg mb-4">{t("콜렉션")}</h2>
-              {collections.map((collection) => {
-                const imageId = collection.concertId.toString();
-                const isSelected = selectedImageId === imageId;
-                return (
-                  <CardItem
-                    key={collection.concertId}
-                    collection={collection}
-                    isSelected={isSelected}
-                    handleImageClick={handleImageClick}
-                    zIndexState={zIndexState}
-                  />
-                );
-              })}
-            </CardBody>
-          </Card>
-        </main>
-      </div>
-    </LayoutGroup>
-  );
+   return (
+     <LayoutGroup>
+       <div
+         className="flex flex-col min-h-screen bg-gray-100"
+         style={{ overflow: "visible", position: "relative" }}
+       >
+         {/* 전체 화면 오버레이 */}
+         {selectedImageId && (
+           <div
+             className="fixed inset-0 bg-black bg-opacity-50 z-30"
+             onClick={() => setSelectedImageId(null)} // 오버레이 클릭 시 선택 해제
+             style={{
+               cursor: "pointer",
+             }}
+           ></div>
+         )}
+
+         <main
+           className="flex-grow p-4 space-y-4 pb-16"
+           style={{
+             overflow: "visible",
+             position: "relative",
+           }}
+         >
+           <Card style={{ overflow: "visible", position: "relative" }}>
+             <CardBody
+               className="p-4"
+               style={{ overflow: "visible", position: "relative" }}
+             >
+               <h2 className="font-bold text-lg mb-4">{t("콜렉션")}</h2>
+               <div
+                 className="flex flex-wrap gap-4 justify-center"
+                 style={{
+                   overflow: "visible", // CardItem을 포함하는 부모 div의 overflow를 visible로 설정
+                   aspectRatio: "4 / 3", // 카드 리스트 컨테이너 비율 유지
+                 }}
+               >
+                 {collections.map((collection) => {
+                   const imageId = collection.concertId.toString();
+                   const isSelected = selectedImageId === imageId;
+
+                   return (
+                     <div
+                       key={collection.concertId}
+                       style={{
+                         zIndex: isSelected ? 50 : 15, // 선택된 카드만 오버레이 위에 표시
+                         position: isSelected ? "relative" : "initial",
+                         overflow: "visible", // CardItem을 포함하는 부모 div의 overflow를 visible로 설정
+                         aspectRatio: "4 / 2",
+                       }}
+                     >
+                       <CardItem
+                         collection={collection}
+                         isSelected={isSelected}
+                         handleImageClick={handleImageClick}
+                         zIndexState={{}}
+                       />
+                     </div>
+                   );
+                 })}
+               </div>
+             </CardBody>
+           </Card>
+         </main>
+       </div>
+     </LayoutGroup>
+   );
 }

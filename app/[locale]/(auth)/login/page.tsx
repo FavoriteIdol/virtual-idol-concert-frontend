@@ -74,8 +74,12 @@ export default function LoginPage() {
         <div className="flex items-center justify-center w-full h-full px-6 bg-white md:w-1/2 xl:w-1/3 lg:px-16 xl:px-12">
           <div className="w-full max-w-md">
             <Link href={"/"}>
-              <Button variant="light" size="lg" className="p-2 font-bold">
-              차원저편에서 만난 최애와의 잊을 수 없는 무대입니다만{" "}
+              <Button
+                variant="light"
+                size="lg"
+                className="p-2 font-bold font-GangwonEduPowerExtraBoldA"
+              >
+                Stage On{" "}
               </Button>
             </Link>
             <form className="mt-6" onSubmit={handleSubmit}>
@@ -123,8 +127,6 @@ export default function LoginPage() {
             </form>
 
             <hr className="w-full my-6 border-gray-300" />
-
-           
 
             <p className="mt-8">
               Need an account?

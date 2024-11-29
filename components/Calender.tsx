@@ -224,9 +224,9 @@ export const Calendar = () => {
                 className={`cursor-pointer w-10 h-10 mx-auto flex items-center justify-center rounded-full
                   ${
                     isSelected
-                      ? "bg-blue-500 text-white"
+                      ? "bg-[#eb4ef6] text-white"
                       : hasPerformance
-                      ? "border-2 border-blue-500 text-blue-600 font-bold"
+                      ? "border-2 border-[#eb4ef6] text-[#eb4ef6] font-bold"
                       : "text-gray-800"
                   }
                 `}

@@ -5,6 +5,7 @@ import {
   useMotionValue,
   useTransform,
 } from "framer-motion";
+import { Button } from "@nextui-org/button";
 
 // CollectionItem 타입을 CollectionDTO에 맞게 변경
 export interface CollectionItem {
@@ -37,9 +38,9 @@ const CardItem: React.FC<CardItemProps> = ({
 
   const controls = useAnimation();
   const [isAnimating, setIsAnimating] = useState(false);
-
+  const [isFlipped, setIsFlipped] = useState(false);
   const rotateX = useMotionValue(0);
-  const rotateY = useMotionValue(0);
+  const rotateY = useMotionValue(isFlipped ? 180 : 0); // 초기 상태 설정
 
   const overlayOpacity = useTransform(
     [rotateX, rotateY],
@@ -76,9 +77,19 @@ const CardItem: React.FC<CardItemProps> = ({
         .then(() => {
           setIsAnimating(false);
         });
+      setIsFlipped(false); // 선택 해제 시 뒷면 표시 초기화
     }
   }, [isSelected, controls]);
-
+  const handleCardClick = () => {
+    handleImageClick(imageId);
+  };
+  const handleFlip = () => {
+    setIsFlipped((prev) => !prev);
+    controls.start({
+      rotateY: isFlipped ? 0 : 180, // 클릭 시 한 바퀴 회전
+      transition: { duration: 1.2, ease: "easeInOut" },
+    });
+  };
   const handleMouseMove = (e: React.MouseEvent) => {
     const rect = e.currentTarget.getBoundingClientRect();
     const x = e.clientX - rect.left;
@@ -108,8 +119,22 @@ const CardItem: React.FC<CardItemProps> = ({
         zIndex: isSelected ? 999 : zIndexState[imageId] || 1,
       }}
     >
+      {/* 뒷면 보기 버튼 */}
+      {isSelected && (
+        <Button
+          variant="light"
+          className="absolute bottom-[-10rem] right-[-10rem] px-4 py-2 rounded bg-blue-400 text-white shadow-md hover:bg-blue-500 z-10"
+          onClick={(e) => {
+            e.stopPropagation(); // 부모 클릭 이벤트 방지
+            handleFlip();
+          }}
+        >
+          {isFlipped ? "앞면 보기" : "뒷면 보기"}
+        </Button>
+      )}
       <motion.div
-        onClick={() => handleImageClick(imageId)}
+        onClick={handleCardClick}
+        // onClick={() => handleImageClick(imageId)}
         layout
         layoutId={`card-${imageId}`}
         animate={controls}
@@ -121,13 +146,7 @@ const CardItem: React.FC<CardItemProps> = ({
             : isMobile()
             ? "24rem"
             : "24rem",
-          height: isSelected
-            ? isMobile()
-              ? "7rem"
-              : "13rem"
-            : isMobile()
-            ? "10rem"
-            : "10rem",
+          aspectRatio: "7 / 3", // 비율 유지
           transformStyle: "preserve-3d",
           pointerEvents: isAnimating ? "none" : "auto",
           cursor: "pointer",
@@ -141,6 +160,7 @@ const CardItem: React.FC<CardItemProps> = ({
             transformStyle: "preserve-3d",
             rotateX: rotateX,
             rotateY: rotateY,
+            // rotateY: isFlipped ? 180 : 0, // 180도 회전 상태 토글
           }}
           onMouseMove={(e) => {
             if (!isAnimating) handleMouseMove(e);
@@ -152,10 +172,16 @@ const CardItem: React.FC<CardItemProps> = ({
           {/* 앞면 */}
           <div
             style={{
-              backfaceVisibility: "hidden",
+              backfaceVisibility: "hidden", 
               position: "absolute",
               width: "100%",
               height: "100%",
+              WebkitMaskImage: "url('/images/ticket.png')",
+              maskImage: "url('/images/ticket.png')",
+              WebkitMaskSize: "100% 100%",
+              maskSize: "100% 100%",
+              WebkitMaskRepeat: "no-repeat", 
+              maskRepeat: "no-repeat",
             }}
           >
             <div className="font-GangwonEduPowerExtraBoldA font-extrabold flex w-full h-full relative">
@@ -166,13 +192,19 @@ const CardItem: React.FC<CardItemProps> = ({
                   className="w-full h-full bg-transparent rounded-md object-cover shadow-lg"
                 />
               </div>
-              <div className="absolute bottom-0 right-5 leading-tight text-stroke overflow-hidden text-ellipsis whitespace-nowrap">
-                <p className="leading-tight font-extrabold text-medium">
-                  {collection.concertName.split('"')[0]}
-                </p>
-                <p className="leading-tight text-medium">
-                  "{collection.concertName.split('"')[1]}"
-                </p>
+              <div
+                style={{
+                  color: "white",
+                  fontWeight: "bold",
+                  fontSize: isSelected ? "2rem" : "1.1rem",
+                  lineHeight: isSelected ? "2.0rem" : "1.0rem",
+                  letterSpacing: "-0.07em",
+                  textShadow: "0 2px 5px rgba(0, 0, 0, 0.5)",
+                }}
+                className=" overflow-visible absolute bottom-0 right-5 leading-tight text-stroke overflow-hidden text-ellipsis whitespace-nowrap"
+              >
+                <p>{collection.concertName.split('"')[0]}</p>
+                <p>"{collection.concertName.split('"')[1]}"</p>
               </div>
             </div>
           </div>
@@ -188,7 +220,12 @@ const CardItem: React.FC<CardItemProps> = ({
               mixBlendMode: "screen",
               opacity: overlayOpacity,
               pointerEvents: "none",
-              borderRadius: "1rem",
+              WebkitMaskImage: "url('/images/ticket-mask.svg')",
+              maskImage: "url('/images/ticket-mask.svg')", 
+              WebkitMaskSize: "100% 100%",
+              maskSize: "100% 100%",
+              WebkitMaskRepeat: "no-repeat",
+              maskRepeat: "no-repeat",
             }}
           />
 
@@ -196,14 +233,14 @@ const CardItem: React.FC<CardItemProps> = ({
           <div
             style={{
               backfaceVisibility: "hidden",
-              position: "absolute",
+              position: "absolute", 
               width: "100%",
               height: "100%",
               transform: "rotateY(180deg)",
-              backgroundColor: "white",
               display: "flex",
               alignItems: "center",
               justifyContent: "center",
+              clipPath: "polygon(0% 5%, 5% 0%, 95% 0%, 100% 5%, 100% 95%, 95% 100%, 5% 100%, 0% 95%)" // 핑킹 가위 효과
             }}
           >
             <div className="font-nanum relative flex items-center justify-center w-full h-full bg-slate-600 rounded-md shadow-md">
