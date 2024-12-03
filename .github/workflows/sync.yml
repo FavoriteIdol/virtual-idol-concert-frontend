@@ -1,0 +1,32 @@
+name: Sync to Another Repository
+
+on:
+  push:
+    branches:
+      - main  # 감시할 브랜치를 지정합니다.
+
+jobs:
+  sync:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout main
+        uses: actions/checkout@v4
+        with: 
+          token: ${{ secrets.PAT_TOKEN }}
+          fetch-depth: 0
+          ref: main
+          
+      - name: Add remote-url
+        run: |
+          git remote add forked-repo https://tripleyoung:${{ secrets.PAT_TOKEN }}@github.com/tripleyoung/reward-app.git
+          git config --global user.name "tripleyoung"
+          git config --global user.email "dudnjsckrgo@gmail.com"
+      
+      - name: Push changes to forked-repo 
+        run: |
+          git push -f forked-repo main
+      
+      - name: Clean up
+        run: |
+          git remote remove forked-repo
