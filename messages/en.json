@@ -62,6 +62,11 @@
   "이미지_업로드_중": "Uploading image...",
   "이미지_업로드_성공": "Image uploaded successfully",
   "이미지_업로드_실패": "Failed to upload image",
-  "이미지_변경": "Change Image"
-
+  "이미지_변경": "Change Image",
+  "공연_상세정보": "Concert Details",
+  "상세정보_수정": "Update Details",
+  "공연곡_관리": "Manage Setlist",
+  "상세정보_수정_중": "Updating details...",
+  "상세정보_수정_성공": "Details updated successfully",
+  "상세정보_수정_실패": "Failed to update details"
 }

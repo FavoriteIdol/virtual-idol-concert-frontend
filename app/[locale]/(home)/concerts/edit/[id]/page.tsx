@@ -1,6 +1,6 @@
 'use client';
 
-import { useQuery, useMutation } from '@tanstack/react-query';
+import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import apiClient from '@handler/fetch/client';
 import { Input, Button, Textarea, Select, SelectItem, Card } from "@nextui-org/react";
 import { useParams, useRouter } from 'next/navigation';
@@ -27,6 +27,7 @@ interface ConcertUpdateForm {
   peopleScale: string;
   songIds: number[];
   img?: string;
+  newImage?: File;
 }
 
 interface SongUploadForm {
@@ -42,6 +43,7 @@ export default function EditConcertPage() {
   const userInfo = useUserStore((state) => state.userInfo);
   const fileInputRef = useRef<HTMLInputElement>(null);
   const imageInputRef = useRef<HTMLInputElement>(null);
+  const queryClient = useQueryClient();
 
   const [songUploadForm, setSongUploadForm] = useState<SongUploadForm>({
     title: '',
@@ -121,11 +123,34 @@ export default function EditConcertPage() {
 
   // 공연 수정 mutation
   const updateConcertMutation = useMutation({
-    mutationFn: (updateData: ConcertUpdateForm) => {
-      return apiClient.put(`/concerts/${concertId}`, updateData);
-    },
-    onSuccess: () => {
-      router.push('/concerts/my-list');
+    mutationFn: async (updateData: ConcertUpdateForm) => {
+      const loadingToast = toast.loading(t("상세정보_수정_중"));
+
+      try {
+        // 1. 새 이미지 업로드
+        let newImageUrl = updateData.img;
+        if (updateData.newImage) {
+          const imageFormData = new FormData();
+          imageFormData.append('file', updateData.newImage);
+          const { data: uploadedImageUrl } = await apiClient.post('/files/upload', imageFormData);
+          newImageUrl = uploadedImageUrl;
+        }
+
+        // 2. 공연 정보 업데이트
+        await apiClient.put(`/concerts/${concertId}`, {
+          ...updateData,
+          img: newImageUrl
+        });
+
+        toast.success(t("상세정보_수정_성공"), { id: loadingToast });
+        
+        // 페이지 이동 제거하고 데이터 리프레시
+        queryClient.invalidateQueries({ queryKey: ['concert', concertId] });
+      } catch (error) {
+        console.error('Error updating concert:', error);
+        toast.error(t("상세정보_수정_실패"), { id: loadingToast });
+        throw error;
+      }
     }
   });
 
@@ -241,163 +266,178 @@ export default function EditConcertPage() {
 
   return (
     <form onSubmit={handleSubmit} className="p-4 space-y-4">
-      <h1 className="text-2xl font-bold">{t("공연_수정")}</h1>
+      <h1 className="text-2xl font-bold mb-6">{t("공연_수정")}</h1>
       
-      <div className="relative w-full h-48 bg-gray-100 rounded-lg overflow-hidden group">
-        {(formData.img || concert?.img) ? (  // formData.img를 우선 확인
-          <>
-            <Image
-              alt={formData.name || concert?.name}
-              src={formData.img || concert?.img}  // formData.img를 우선 사용
-              fill
-              className="object-cover"
-              sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
-            />
-            <div className="absolute inset-0 bg-black bg-opacity-40 transition-opacity opacity-0 group-hover:opacity-100" />
-          </>
-        ) : (
-          <div className="w-full h-full flex items-center justify-center">
-            <ImageIcon className="w-12 h-12 text-gray-400" />
-          </div>
-        )}
-        <input
-          type="file"
-          ref={imageInputRef}
-          onChange={handleImageUpload}
-          accept="image/*"
-          className="hidden"
-        />
-        <Button
-          color="primary"
-          variant="solid"
-          size="md"
-          className="absolute bottom-4 right-4 shadow-lg bg-primary-500 hover:bg-primary-600 text-white z-10"
-          onClick={() => imageInputRef.current?.click()}
-        >
-          <Upload className="w-4 h-4 mr-2" />
-          {t("이미지_변경")}
-        </Button>
-      </div>
-
-      <Input
-        label={t("공연_제목")}
-        value={formData.name}
-        onChange={(e) => setFormData(prev => ({ ...prev, name: e.target.value }))}
-      />
-
-      <Input
-        label={t("공연_날짜")}
-        type="date"
-        value={formData.concertDate}
-        onChange={(e) => setFormData(prev => ({ ...prev, concertDate: e.target.value }))}
-      />
-
-      <div className="flex gap-4">
-        <Input
-          label={t("시작_시간")}
-          type="time"
-          value={formData.startTime}
-          onChange={(e) => setFormData(prev => ({ ...prev, startTime: e.target.value }))}
-        />
-        <Input
-          label={t("종료_시간")}
-          type="time"
-          value={formData.endTime}
-          onChange={(e) => setFormData(prev => ({ ...prev, endTime: e.target.value }))}
-        />
-      </div>
-
-      <Input
-        label={t("티켓_가격")}
-        value={formData.ticketPrice}
-        onChange={(e) => setFormData(prev => ({ ...prev, ticketPrice: e.target.value }))}
-      />
-
-      <Input
-        label={t("관객_규모")}
-        value={formData.peopleScale}
-        onChange={(e) => setFormData(prev => ({ ...prev, peopleScale: e.target.value }))}
-      />
-
-      {/* 노래 업로드 섹션 */}
-      <div className="space-y-2 p-4 border rounded-lg">
-        <h2 className="text-lg font-semibold">{t("공연곡_추가")}</h2>
-        <div className="flex gap-2">
-          <Input
-            label={t("노래_제목")}
-            value={songUploadForm.title}
-            onChange={(e) => setSongUploadForm(prev => ({ ...prev, title: e.target.value }))}
-          />
+      {/* 상세 정보 섹션 */}
+      <div className="space-y-4 border rounded-lg p-6 bg-content1">
+        <h2 className="text-xl font-semibold mb-4">{t("공연_상세정보")}</h2>
+        
+        <div className="relative w-full h-48 bg-gray-100 rounded-lg overflow-hidden group">
+          {(formData.img || concert?.img) ? (  // formData.img를 우선 확인
+            <>
+              <Image
+                alt={formData.name || concert?.name}
+                src={formData.img || concert?.img}  // formData.img를 우선 사용
+                fill
+                className="object-cover"
+                sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
+              />
+              <div className="absolute inset-0 bg-black bg-opacity-40 transition-opacity opacity-0 group-hover:opacity-100" />
+            </>
+          ) : (
+            <div className="w-full h-full flex items-center justify-center">
+              <ImageIcon className="w-12 h-12 text-gray-400" />
+            </div>
+          )}
           <input
             type="file"
-            ref={fileInputRef}
-            onChange={handleFileChange}
-            accept="audio/mp3,audio/wav,audio/*"
+            ref={imageInputRef}
+            onChange={handleImageUpload}
+            accept="image/*"
             className="hidden"
           />
           <Button
             color="primary"
-            onClick={handleFileSelect}
+            variant="solid"
+            size="md"
+            className="absolute bottom-4 right-4 shadow-lg bg-primary-500 hover:bg-primary-600 text-white z-10"
+            onClick={() => imageInputRef.current?.click()}
           >
             <Upload className="w-4 h-4 mr-2" />
-            {t("파일_선택")}
+            {t("이미지_변경")}
           </Button>
+        </div>
+
+        <Input
+          label={t("공연_제목")}
+          value={formData.name}
+          onChange={(e) => setFormData(prev => ({ ...prev, name: e.target.value }))}
+        />
+
+        <Input
+          label={t("공연_날짜")}
+          type="date"
+          value={formData.concertDate}
+          onChange={(e) => setFormData(prev => ({ ...prev, concertDate: e.target.value }))}
+        />
+
+        <div className="flex gap-4">
+          <Input
+            label={t("시작_시간")}
+            type="time"
+            value={formData.startTime}
+            onChange={(e) => setFormData(prev => ({ ...prev, startTime: e.target.value }))}
+          />
+          <Input
+            label={t("종료_시간")}
+            type="time"
+            value={formData.endTime}
+            onChange={(e) => setFormData(prev => ({ ...prev, endTime: e.target.value }))}
+          />
+        </div>
+
+        <Input
+          label={t("티켓_가격")}
+          value={formData.ticketPrice}
+          onChange={(e) => setFormData(prev => ({ ...prev, ticketPrice: e.target.value }))}
+        />
+
+        <Input
+          label={t("관객_규모")}
+          value={formData.peopleScale}
+          onChange={(e) => setFormData(prev => ({ ...prev, peopleScale: e.target.value }))}
+        />
+
+        {/* 상세 정보 수정 버튼 */}
+        <div className="flex justify-end gap-4 mt-6">
           <Button
-            color="primary"
-            onClick={handleSongUpload}
-            isDisabled={!songUploadForm.file || !songUploadForm.title}
+            color="danger"
+            variant="light"
+            onClick={() => router.push('/concerts/my-list')}
           >
-            <Plus className="w-4 h-4 mr-2" />
-            {t("노래_등록")}
+            {t("취소")}
+          </Button>
+          <Button 
+            color="primary" 
+            type="submit"
+            isLoading={updateConcertMutation.status === 'pending'}
+          >
+            {t("상세정보_수정")}
           </Button>
         </div>
-        {songUploadForm.file && (
-          <p className="text-sm text-gray-600">
-            {t("선택된_파일")}: {songUploadForm.file.name}
-          </p>
-        )}
       </div>
 
-      {/* 노래 목록 섹션 */}
-      <div className="space-y-2">
-        <h2 className="text-lg font-semibold">{t("공연곡_목록")}</h2>
-        <div className="grid gap-2">
-          {mySongs?.map((song) => (
-            <Card key={song.id} className="p-4">
-              <div className="flex justify-between items-center">
-                <span className="text-medium">{song.title}</span>
-                <Button
-                  isIconOnly
-                  color="danger"
-                  onClick={async () => {
-                    try {
-                      await removeSongMutation.mutateAsync(song.id);
-                      toast.success(t("노래_제거_성공"));
-                    } catch (error) {
-                      console.error('Error removing song:', error);
-                      toast.error(t("노래_제거_실패"));
-                    }
-                  }}
-                >
-                  <X className="h-5 w-5" />
-                </Button>
-              </div>
-            </Card>
-          ))}
+      {/* 공연곡 관리 섹션 */}
+      <div className="mt-8 space-y-6">
+        <h2 className="text-xl font-semibold">{t("공연곡_관리")}</h2>
+
+        {/* 노래 업로드 섹션 */}
+        <div className="space-y-2 p-4 border rounded-lg">
+          <h3 className="text-lg font-semibold">{t("공연곡_추가")}</h3>
+          <div className="flex gap-2 items-end">
+            <Input
+              label={t("노래_제목")}
+              value={songUploadForm.title}
+              onChange={(e) => setSongUploadForm(prev => ({ ...prev, title: e.target.value }))}
+            />
+            <input
+              type="file"
+              ref={fileInputRef}
+              onChange={handleFileChange}
+              accept="audio/mp3,audio/wav,audio/*"
+              className="hidden"
+            />
+            <Button
+              color="primary"
+              onClick={handleFileSelect}
+              className="h-[56px]"
+            >
+              {t("파일_선택")}
+            </Button>
+            <Button
+              color="primary"
+              onClick={handleSongUpload}
+              isDisabled={!songUploadForm.file || !songUploadForm.title}
+              className="h-[56px]"
+            >
+              {t("노래_등록")}
+            </Button>
+          </div>
+          {songUploadForm.file && (
+            <div className="text-sm text-gray-600">
+              {t("선택된_파일")}: {songUploadForm.file.name}
+            </div>
+          )}
         </div>
-      </div>
 
-      <div className="flex gap-4">
-        <Button
-          color="danger"
-          variant="light"
-          onClick={() => router.push('/concerts/my-list')}
-        >
-          {t("취소")}
-        </Button>
-        <Button color="primary" type="submit">
-          {t("수정_완료")}
-        </Button>
+        {/* 노래 목록 섹션 */}
+        <div className="space-y-2">
+          <h3 className="text-lg font-semibold">{t("공연곡_목록")}</h3>
+          <div className="grid gap-2">
+            {mySongs?.map((song) => (
+              <Card key={song.id} className="p-4">
+                <div className="flex justify-between items-center">
+                  <span className="text-medium">{song.title}</span>
+                  <Button
+                    isIconOnly
+                    color="danger"
+                    onClick={async () => {
+                      try {
+                        await removeSongMutation.mutateAsync(song.id);
+                        toast.success(t("노래_제거_성공"));
+                      } catch (error) {
+                        console.error('Error removing song:', error);
+                        toast.error(t("노래_제거_실패"));
+                      }
+                    }}
+                  >
+                    <X className="h-5 w-5" />
+                  </Button>
+                </div>
+              </Card>
+            ))}
+          </div>
+        </div>
       </div>
     </form>
   );
