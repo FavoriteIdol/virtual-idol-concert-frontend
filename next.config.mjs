@@ -1,4 +1,5 @@
 import createNextIntlPlugin from "next-intl/plugin";
+import { resolve } from 'path';
 
 /** @type {import('next').NextConfig} */
 const nextConfig = {
@@ -17,6 +18,10 @@ const nextConfig = {
         ...config.resolve.fallback,
         fs: false,
         path: false,
+      };
+      config.resolve.alias = {
+        ...config.resolve.alias,
+        __dirname: resolve('./'),
       };
     }
     return config;
