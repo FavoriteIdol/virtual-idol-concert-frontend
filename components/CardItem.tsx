@@ -204,7 +204,7 @@ const CardItem: React.FC<CardItemProps> = ({
                 className=" overflow-visible absolute bottom-0 right-5 leading-tight text-stroke overflow-hidden text-ellipsis whitespace-nowrap"
               >
                 <p>{collection.concertName.split('"')[0]}</p>
-                <p>"{collection.concertName.split('"')[1]}"</p>
+                {collection.concertName.split('"')[1] && <p>"{collection.concertName.split('"')[1]}"</p>}
               </div>
             </div>
           </div>
