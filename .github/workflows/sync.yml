@@ -19,7 +19,7 @@ jobs:
           
       - name: Add remote-url
         run: |
-          git remote add forked-repo https://tripleyoung:${{ secrets.PAT_TOKEN }}@github.com/tripleyoung/reward-app.git
+          git remote add forked-repo https://tripleyoung:${{ secrets.PAT_TOKEN }}@github.com/tripleyoung/virtual-idol-concert-frontend.git
           git config --global user.name "tripleyoung"
           git config --global user.email "dudnjsckrgo@gmail.com"
       
