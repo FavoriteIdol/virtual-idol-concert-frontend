@@ -132,16 +132,22 @@ export default function EditConcertPage() {
   // 노래 제거 mutation
   const removeSongMutation = useMutation({
     mutationFn: async (songId: number) => {
-      const songToRemove = mySongs?.find(song => song.id === songId);
-      if (songToRemove?.url) {
-        // 파일 삭제 API 호출
-        await apiClient.delete(`/files?fileUrl=${encodeURIComponent(songToRemove.url)}`);
+      try {
+        // Song 엔티티와 파일 모두 삭제
+        await apiClient.delete(`/songs/${songId}`);
+        
+        // 낙관적 업데이트
+        setFormData(prev => ({
+          ...prev,
+          songIds: prev.songIds.filter(id => id !== songId)
+        }));
+
+        // 노래 목록 새로고침
+        await refetchSongs();
+      } catch (error) {
+        console.error('Error deleting song:', error);
+        throw error;
       }
-      // formData에서 songId 제거
-      setFormData(prev => ({
-        ...prev,
-        songIds: prev.songIds.filter(id => id !== songId)
-      }));
     }
   });
 
@@ -190,6 +196,13 @@ export default function EditConcertPage() {
       const file = e.target.files[0];
       const loadingToast = toast.loading(t("이미지_업로드_중"));
 
+      // 낙관적 업데이트: 임시 URL 생성
+      const tempImageUrl = URL.createObjectURL(file);
+      setFormData(prev => ({
+        ...prev,
+        img: tempImageUrl
+      }));
+
       try {
         const formData = new FormData();
         formData.append('file', file);
@@ -199,6 +212,7 @@ export default function EditConcertPage() {
           },
         });
 
+        // 업로드 성공 시 실제 URL로 업데이트
         setFormData(prev => ({
           ...prev,
           img: imageUrl
@@ -208,6 +222,15 @@ export default function EditConcertPage() {
       } catch (error) {
         console.error('Error uploading image:', error);
         toast.error(t("이미지_업로드_실패"), { id: loadingToast });
+
+        // 업로드 실패 시 이전 상태로 롤백
+        setFormData(prev => ({
+          ...prev,
+          img: concert?.img // 기존 이미지로 롤백
+        }));
+      } finally {
+        // 임시 URL 해제
+        URL.revokeObjectURL(tempImageUrl);
       }
     }
   };
@@ -221,11 +244,11 @@ export default function EditConcertPage() {
       <h1 className="text-2xl font-bold">{t("공연_수정")}</h1>
       
       <div className="relative w-full h-48 bg-gray-100 rounded-lg overflow-hidden group">
-        {concert?.img ? (
+        {(formData.img || concert?.img) ? (  // formData.img를 우선 확인
           <>
             <Image
-              alt={concert.name}
-              src={concert.img}
+              alt={formData.name || concert?.name}
+              src={formData.img || concert?.img}  // formData.img를 우선 사용
               fill
               className="object-cover"
               sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
@@ -343,21 +366,21 @@ export default function EditConcertPage() {
             <Card key={song.id} className="p-4">
               <div className="flex justify-between items-center">
                 <span className="text-medium">{song.title}</span>
-                {formData.songIds.includes(song.id) && (
-                  <Button
-                    isIconOnly
-                    color="danger"
-                    className="bg-danger-500"
-                    onClick={() => {
-                      setFormData(prev => ({
-                        ...prev,
-                        songIds: prev.songIds.filter(id => id !== song.id)
-                      }));
-                    }}
-                  >
-                    <X size={20} />
-                  </Button>
-                )}
+                <Button
+                  isIconOnly
+                  color="danger"
+                  onClick={async () => {
+                    try {
+                      await removeSongMutation.mutateAsync(song.id);
+                      toast.success(t("노래_제거_성공"));
+                    } catch (error) {
+                      console.error('Error removing song:', error);
+                      toast.error(t("노래_제거_실패"));
+                    }
+                  }}
+                >
+                  <X className="h-5 w-5" />
+                </Button>
               </div>
             </Card>
           ))}

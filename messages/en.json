@@ -48,10 +48,20 @@
   "지난_공연_없음": "No past concerts",
   "공연곡": "Setlist",
   "공연곡_목록": "Setlist",
-  "공연곡_추가": "Add Song",
+  "공연곡_추가": "Add Song to Setlist",
   "노래_없음": "No songs registered",
   "노래_제목": "Song Title",
   "파일_선택": "Select File",
   "노래_등록": "Upload Song",
-  "선택된_파일": "Selected File"
+  "선택된_파일": "Selected File",
+  "노래_업로드_중": "Uploading song...",
+  "노래_업로드_성공": "Song uploaded successfully",
+  "노래_업로드_실패": "Failed to upload song",
+  "노래_제거_성공": "Song removed successfully",
+  "노래_제거_실패": "Failed to remove song",
+  "이미지_업로드_중": "Uploading image...",
+  "이미지_업로드_성공": "Image uploaded successfully",
+  "이미지_업로드_실패": "Failed to upload image",
+  "이미지_변경": "Change Image"
+
 }

@@ -67,7 +67,7 @@ export default function MyConcertsPage() {
     }, { upcoming: [], ongoing: [], past: [] });
   }, [concerts]);
 
-  const ConcertCard = ({ concert }: { concert: Concert }) => (
+  const ConcertCard = ({ concert, isPast }: { concert: Concert, isPast: boolean }) => (
     <Card key={concert.id} className="p-4">
       <div className="flex justify-between items-center">
         <div>
@@ -75,21 +75,20 @@ export default function MyConcertsPage() {
           <p className="text-sm text-gray-500">
             {concert.concertDate} {concert.startTime} - {concert.endTime}
           </p>
-          {/* <p className="text-sm text-gray-500">
-            {concert.ticketPrice} 티켓 가격 | {concert.peopleScale} 관객 규모
-          </p> */}
           {concert.songs && concert.songs.length > 0 && (
             <p className="text-sm text-gray-500 mt-2">
               {t("공연곡")}: {concert.songs.map(song => song.title).join(", ")}
             </p>
           )}
         </div>
-        <Button 
-          color="primary"
-          onClick={() => router.push(`/concerts/edit/${concert.id}`)}
-        >
-          {t("공연_수정")}
-        </Button>
+        {!isPast && (
+          <Button 
+            color="primary"
+            onClick={() => router.push(`/concerts/edit/${concert.id}`)}
+          >
+            {t("공연_수정")}
+          </Button>
+        )}
       </div>
       {concert.img && (
         <div className="relative mt-2 w-full h-48">
@@ -116,7 +115,7 @@ export default function MyConcertsPage() {
         <Tab key="upcoming" title={t("예정된_공연")}>
           <div className="grid gap-4 mt-4">
             {categorizedConcerts.upcoming.map((concert: Concert) => (
-              <ConcertCard key={concert.id} concert={concert} />
+              <ConcertCard key={concert.id} concert={concert} isPast={false} />
             ))}
             {categorizedConcerts.upcoming.length === 0 && (
               <p className="text-center text-gray-500">{t("예정된_공연_없음")}</p>
@@ -126,7 +125,7 @@ export default function MyConcertsPage() {
         <Tab key="ongoing" title={t("진행_중인_공연")}>
           <div className="grid gap-4 mt-4">
             {categorizedConcerts.ongoing.map((concert: Concert) => (
-              <ConcertCard key={concert.id} concert={concert} />
+              <ConcertCard key={concert.id} concert={concert} isPast={false} />
             ))}
             {categorizedConcerts.ongoing.length === 0 && (
               <p className="text-center text-gray-500">{t("진행_중인_공연_없음")}</p>
@@ -136,7 +135,7 @@ export default function MyConcertsPage() {
         <Tab key="past" title={t("지난_공연")}>
           <div className="grid gap-4 mt-4">
             {categorizedConcerts.past.map((concert: Concert) => (
-              <ConcertCard key={concert.id} concert={concert} />
+              <ConcertCard key={concert.id} concert={concert} isPast={true} />
             ))}
             {categorizedConcerts.past.length === 0 && (
               <p className="text-center text-gray-500">{t("지난_공연_없음")}</p>
