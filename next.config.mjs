@@ -9,6 +9,7 @@ const nextConfig = {
       "via.placeholder.com",
       "example.com",
       "master-of-prediction.shop",
+      "file.reward-factory.shop",
       "localhost",
     ],
   },
