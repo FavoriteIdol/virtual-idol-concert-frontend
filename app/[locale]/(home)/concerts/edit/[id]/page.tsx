@@ -109,7 +109,7 @@ export default function EditConcertPage() {
         title,
         url,
         artistId: userInfo?.userId,
-        concertId: concertId,
+        concertId: Number(concertId),
         duration: 180
       });
       return data;
