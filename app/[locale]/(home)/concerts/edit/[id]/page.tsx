@@ -64,7 +64,7 @@ export default function EditConcertPage() {
   const { data: mySongs, refetch: refetchSongs } = useQuery<SongDTO[]>({
     queryKey: ['mySongs'],
     queryFn: async () => {
-      const { data } = await apiClient.get(`/songs/my-songs`);
+      const { data } = await apiClient.get(`/songs/concert/${concertId}`);
       return data;
     }
   });
