@@ -62,11 +62,12 @@ export default function EditConcertPage() {
 
   // 내 노래 목록 가져오기
   const { data: mySongs, refetch: refetchSongs } = useQuery<SongDTO[]>({
-    queryKey: ['mySongs'],
+    queryKey: ['songs', concertId],
     queryFn: async () => {
       const { data } = await apiClient.get(`/songs/concert/${concertId}`);
       return data;
-    }
+    },
+    enabled: !!concertId
   });
 
   // 공연 정보 가져오기
@@ -107,7 +108,9 @@ export default function EditConcertPage() {
       const { data } = await apiClient.post('/songs', {
         title,
         url,
-        artistId: userInfo?.userId
+        artistId: userInfo?.userId,
+        concertId: concertId,
+        duration: 180
       });
       return data;
     },
