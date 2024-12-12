@@ -12,7 +12,8 @@ export interface CollectionItem {
   concertId: number;
   concertImage: string;
   concertName: string;
-  collectedDate: string;
+  concertDate: string;
+  startTime: string;
   artist: string;
   audience: string;
 }
@@ -40,7 +41,7 @@ const CardItem: React.FC<CardItemProps> = ({
   const [isAnimating, setIsAnimating] = useState(false);
   const [isFlipped, setIsFlipped] = useState(false);
   const rotateX = useMotionValue(0);
-  const rotateY = useMotionValue(isFlipped ? 180 : 0); // 초기 상태 설���
+  const rotateY = useMotionValue(isFlipped ? 180 : 0); // 초기 상태 설정
 
   const overlayOpacity = useTransform(
     [rotateX, rotateY],
@@ -105,9 +106,23 @@ const CardItem: React.FC<CardItemProps> = ({
     rotateY.set(0);
   };
 
-  const collectedDateTime = new Date(collection.collectedDate);
-  const collectedDate = collectedDateTime.toLocaleDateString();
-  const collectedTime = collectedDateTime.toLocaleTimeString();
+  const formatDateTime = () => {
+    const date = new Date(collection.concertDate);
+    const time = collection.startTime;
+
+    const formattedDate = date.toLocaleDateString('ko-KR', {
+      year: 'numeric',
+      month: '2-digit',
+      day: '2-digit'
+    });
+
+    return {
+      date: formattedDate,
+      time: time
+    };
+  };
+
+  const { date: concertDate, time: concertTime } = formatDateTime();
 
   return (
     <motion.div
@@ -265,10 +280,10 @@ const CardItem: React.FC<CardItemProps> = ({
                 <div className="col-span-2 row-span-2 flex flex-col items-start justify-center border border-white p-1.5 overflow-hidden text-ellipsis whitespace-nowrap">
                   <p className="text-white text-sm font-semibold">Date</p>
                   <p className="text-white text-sm font-bold font-GangwonEduPowerExtraBoldA">
-                    {collectedDate}
+                    {concertDate}
                   </p>
                   <p className="text-white text-sm font-bold font-GangwonEduPowerExtraBoldA">
-                    {collectedTime}
+                    {concertTime}
                   </p>
                 </div>
                 <div className="col-span-2 row-start-2 flex flex-col items-start justify-center border border-white p-1.5 overflow-hidden text-ellipsis whitespace-nowrap">

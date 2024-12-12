@@ -158,7 +158,7 @@ export default function MyPage({ params }: MyPageProps) {
                  {collections.map((collection) => {
                    const imageId = collection.concertId.toString();
                    const isSelected = selectedImageId === imageId;
-
+                  console.log(collection);
                    return (
                      <div
                        key={collection.concertId}
