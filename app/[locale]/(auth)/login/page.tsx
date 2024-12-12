@@ -67,19 +67,51 @@ export default function LoginPage() {
             src="/images/login-bg.gif"
             alt="Background Image"
             className="object-cover w-full h-full"
-            layout="fill" // 또는 width와 height를 지정하세요.
+            layout="fill"
           />
+          <div className="absolute top-[-40px] left-[45%] transform -translate-x-1/2 z-10 flex flex-col items-center">
+            <Image
+              src="/images/logo.png"
+              alt="Stage On Logo"
+              width={500}
+              height={0}
+              className="object-contain w-auto"
+              style={{ aspectRatio: 'auto' }}
+              priority
+            />
+            <Image
+              src="/images/logo-title.png"
+              alt="Stage On Title"
+              width={380}
+              height={0}
+              className=" -mt-16 ml-16"
+              style={{ 
+                width: '450px',  // 직접 width 지정
+                height: 'auto',
+                aspectRatio: 'auto'
+              }}
+              priority
+            />
+          </div>
         </div>
 
         <div className="flex items-center justify-center w-full h-full px-6 bg-white md:w-1/2 xl:w-1/3 lg:px-16 xl:px-12">
           <div className="w-full max-w-md">
-            <Link href={"/"}>
+            <Link href={"/"} className="-mb-8">
               <Button
                 variant="light"
-                size="lg"
-                className="p-2 font-bold font-GangwonEduPowerExtraBoldA"
+                size="lg" 
+                className="-p-1 -mb-8"
               >
-                Stage On{" "}
+                <Image
+                  src="/images/title.png"
+                  alt="Stage On"
+                  width={150}
+                  height={0}
+                  className="object-contain w-auto"
+                  style={{ aspectRatio: 'auto' }}
+                  priority
+                />
               </Button>
             </Link>
             <form className="mt-6" onSubmit={handleSubmit}>

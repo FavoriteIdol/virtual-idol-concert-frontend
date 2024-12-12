@@ -191,28 +191,26 @@ export default function HomeScreen() {
                 imminentPerformances?.map((performance: any) => (
                   <SwiperSlide
                     key={performance.id}
-                    // onClick={() =>
-                      // router.push(`/performance/${performance.id}`)
-                    // }
                   >
                     <Card className="h-[400px] relative w-full cursor-pointer">
-                      <div className="absolute z-10 top-4 left-4 flex-col items-start">
-                        <p className="text-tiny text-white/80 uppercase font-bold">
-                          {new Date(performance.concertDate).toLocaleString(
-                            "ko-KR",
-                            { dateStyle: "short", timeStyle: "short" }
-                          )}
-                        </p>
-                        <h4 className="text-white font-medium text-2xl">
-                          {performance.name}
-                        </h4>
-                        <p className="text-sm text-white/80 mt-1">
-                          {performance.concertName}
-                        </p>
+                      <div className="absolute z-20 top-4 left-4 right-4">
+                        <div className="absolute inset-0 bg-black/40 rounded-lg -m-3 p-3" />
+                        <div className="relative z-10">
+                          <p className="text-tiny text-white/80 uppercase font-bold">
+                            {new Date(performance.concertDate).toLocaleString(
+                              "ko-KR",
+                              { dateStyle: "short", timeStyle: "short" }
+                            )}
+                          </p>
+                          <h4 className="text-white font-medium text-2xl">
+                            {performance.name}
+                          </h4>
+                          <p className="text-sm text-white/80 mt-1">
+                            {performance.concertName}
+                          </p>
+                        </div>
                       </div>
-                      <div className="relative w-full h-full bg-slate-500">
-                        {" "}
-                        {/* 검정색 배경으로 설정 */}
+                      <div className="relative w-full h-full">
                         <Image
                           alt={`Image for ${performance.name}`}
                           src={performance.concertImg}
@@ -220,7 +218,7 @@ export default function HomeScreen() {
                           className="object-cover w-full h-full"
                           onError={(e) =>
                             (e.currentTarget.style.display = "none")
-                          } // 이미지 로딩 실패 시 숨김 처리
+                          }
                         />
                       </div>
                     </Card>
