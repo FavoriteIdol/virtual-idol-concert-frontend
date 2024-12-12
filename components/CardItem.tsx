@@ -40,7 +40,7 @@ const CardItem: React.FC<CardItemProps> = ({
   const [isAnimating, setIsAnimating] = useState(false);
   const [isFlipped, setIsFlipped] = useState(false);
   const rotateX = useMotionValue(0);
-  const rotateY = useMotionValue(isFlipped ? 180 : 0); // 초기 상태 설정
+  const rotateY = useMotionValue(isFlipped ? 180 : 0); // 초기 상태 설���
 
   const overlayOpacity = useTransform(
     [rotateX, rotateY],
@@ -240,7 +240,12 @@ const CardItem: React.FC<CardItemProps> = ({
               display: "flex",
               alignItems: "center",
               justifyContent: "center",
-              clipPath: "polygon(0% 5%, 5% 0%, 95% 0%, 100% 5%, 100% 95%, 95% 100%, 5% 100%, 0% 95%)" // 핑킹 가위 효과
+              WebkitMaskImage: "url('/images/ticket.png')",
+              maskImage: "url('/images/ticket.png')",
+              WebkitMaskSize: "100% 100%",
+              maskSize: "100% 100%",
+              WebkitMaskRepeat: "no-repeat",
+              maskRepeat: "no-repeat",
             }}
           >
             <div className="font-nanum relative flex items-center justify-center w-full h-full bg-slate-600 rounded-md shadow-md">
@@ -250,31 +255,31 @@ const CardItem: React.FC<CardItemProps> = ({
                 className="w-full h-full bg-slate-400 rounded-md object-cover"
               />
               <div className="absolute inset-0 bg-black opacity-70 rounded-md"></div>
-              <div className="absolute inset-0 grid grid-rows-3 grid-cols-4 p-4 border-2 border-white rounded-md">
-                <div className="col-span-4 flex items-center justify-start border border-white p-2 overflow-hidden text-ellipsis whitespace-nowrap">
-                  <p className="text-white font-semibold">Title</p>
-                  <p className="text-white font-bold ml-2 font-GangwonEduPowerExtraBoldA">
+              <div className="absolute inset-0 grid grid-rows-3 grid-cols-4 p-6 border-0 rounded-md">
+                <div className="col-span-4 flex items-center justify-start border border-white p-1.5 overflow-hidden text-ellipsis whitespace-nowrap">
+                  <p className="text-white text-sm font-semibold">Title</p>
+                  <p className="text-white text-sm font-bold ml-2 font-GangwonEduPowerExtraBoldA">
                     {collection.concertName}
                   </p>
                 </div>
-                <div className="col-span-2 row-span-2 flex flex-col items-start justify-center border border-white p-2 overflow-hidden text-ellipsis whitespace-nowrap">
-                  <p className="text-white font-semibold">Date</p>
-                  <p className="text-white font-bold font-GangwonEduPowerExtraBoldA">
+                <div className="col-span-2 row-span-2 flex flex-col items-start justify-center border border-white p-1.5 overflow-hidden text-ellipsis whitespace-nowrap">
+                  <p className="text-white text-sm font-semibold">Date</p>
+                  <p className="text-white text-sm font-bold font-GangwonEduPowerExtraBoldA">
                     {collectedDate}
                   </p>
-                  <p className="text-white font-bold font-GangwonEduPowerExtraBoldA">
+                  <p className="text-white text-sm font-bold font-GangwonEduPowerExtraBoldA">
                     {collectedTime}
                   </p>
                 </div>
-                <div className="col-span-2 row-start-2 flex flex-col items-start justify-center border border-white p-2 overflow-hidden text-ellipsis whitespace-nowrap">
-                  <p className="text-white font-semibold">Artist</p>
-                  <p className="text-white font-bold font-GangwonEduPowerExtraBoldA">
+                <div className="col-span-2 row-start-2 flex flex-col items-start justify-center border border-white p-1.5 overflow-hidden text-ellipsis whitespace-nowrap">
+                  <p className="text-white text-sm font-semibold">Artist</p>
+                  <p className="text-white text-sm font-bold font-GangwonEduPowerExtraBoldA">
                     {collection.artist}
                   </p>
                 </div>
-                <div className="col-span-2 row-start-3 flex flex-col items-start border border-white justify-center p-2 overflow-hidden text-ellipsis whitespace-nowrap">
-                  <p className="text-white font-semibold">Audience</p>
-                  <p className="text-white font-bold font-GangwonEduPowerExtraBoldA">
+                <div className="col-span-2 row-start-3 flex flex-col items-start border border-white justify-center p-1.5 overflow-hidden text-ellipsis whitespace-nowrap">
+                  <p className="text-white text-sm font-semibold">Audience</p>
+                  <p className="text-white text-sm font-bold font-GangwonEduPowerExtraBoldA">
                     {collection.audience}
                   </p>
                 </div>
