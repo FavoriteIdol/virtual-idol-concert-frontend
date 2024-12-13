@@ -82,7 +82,9 @@ export default function EditConcertPage() {
         endTime: data.endTime,
         ticketPrice: data.ticketPrice,
         peopleScale: data.peopleScale,
-        songIds: data.songs.map((song: SongDTO) => song.id)
+        songIds: data.songs
+          ?.filter((song: SongDTO) => song && song.id)
+          .map((song: SongDTO) => song.id) || []
       });
       return data;
     }
@@ -170,7 +172,7 @@ export default function EditConcertPage() {
           songIds: prev.songIds.filter(id => id !== songId)
         }));
 
-        // 노래 목록 새로고침
+        // ��래 목록 새로고침
         await refetchSongs();
       } catch (error) {
         console.error('Error deleting song:', error);
