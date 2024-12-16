@@ -8,6 +8,7 @@ import { Toaster } from "react-hot-toast";
 import TanstackQueryProvider from "@/components/TanstackQueryProvider";
 import useUserStore from "@store/useUserStore";
 import ConcertNavItems from "@/components/nav/ConcertNavItems";
+import CharacterNavItems from "@/components/nav/CharacterNavItems";
 
 export default function Layout({ children }: { children: React.ReactNode }) {
   const t = useTranslations();
@@ -43,7 +44,11 @@ export default function Layout({ children }: { children: React.ReactNode }) {
                 </Button>
               </Link>
             ))}
-            {userInfo?.userId && <ConcertNavItems />}
+            {userInfo?.userId && (
+              <>
+                <ConcertNavItems />
+              </>
+            )}
           </nav>
         </aside>
         <main className="col-span-1 md:col-span-8 lg:col-span-6">

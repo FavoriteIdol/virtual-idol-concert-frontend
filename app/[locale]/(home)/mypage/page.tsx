@@ -130,9 +130,23 @@ export default function MyPage({ params }: MyPageProps) {
             <Card>
               <CardBody className="p-4 space-y-4">
                 {[
-                  { icon: User, label: t("내 정보 수정") },
-                  { icon: FileText, label: t("공지사항") },
-                  { icon: HelpCircle, label: t("문의하기") },
+                  { 
+                    icon: User, 
+                    label: t("내_캐릭터"), 
+                    onClick: () => router.push("/my-characters") 
+                  },
+                  { 
+                    icon: User, 
+                    label: t("내_정보_수정") 
+                  },
+                  { 
+                    icon: FileText, 
+                    label: t("공지사항") 
+                  },
+                  { 
+                    icon: HelpCircle, 
+                    label: t("문의하기") 
+                  },
                   {
                     icon: LogOut,
                     label: t("로그아웃"),
@@ -145,6 +159,7 @@ export default function MyPage({ params }: MyPageProps) {
                     key={index}
                     variant="light"
                     className="w-full justify-between py-2 px-0"
+                    onClick={item.onClick}
                   >
                     <div className="flex items-center space-x-2">
                       <item.icon className="h-5 w-5 text-gray-500" />
