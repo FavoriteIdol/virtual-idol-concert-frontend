@@ -14,7 +14,7 @@ export default function Layout({ children }: { children: React.ReactNode }) {
   const t = useTranslations();
   const userInfo = useUserStore((state) => state.userInfo);
 
-  const menuItems = [
+  const desktopMenuItems = [
     { icon: Home, label: t("홈"), href: "/" },
     ...(userInfo?.userId
       ? [
@@ -28,12 +28,28 @@ export default function Layout({ children }: { children: React.ReactNode }) {
       : []),
   ];
 
+  const mobileMenuItems = [
+    { icon: Home, label: t("홈"), href: "/" },
+    ...(userInfo?.userId
+      ? [
+          {
+            icon: CreditCard,
+            label: t("콜렉션"),
+            href: `/collection2/${userInfo.userId}`,
+          },
+          { icon: User, label: t("마이페이지"), href: "/mypage" },
+        ]
+      : [
+          { icon: User, label: t("로그인"), href: "/login" }
+        ]),
+  ];
+
   return (
     <TanstackQueryProvider>
       <div className="min-h-screen grid grid-cols-1 md:grid-cols-12 max-w-6xl mx-auto">
         <aside className="hidden md:block md:col-span-2 lg:col-span-3 p-4 border-r h-screen">
           <nav className="space-y-4">
-            {menuItems.map((item, index) => (
+            {desktopMenuItems.map((item, index) => (
               <Link key={index} href={item.href}>
                 <Button
                   variant="light"
@@ -64,7 +80,7 @@ export default function Layout({ children }: { children: React.ReactNode }) {
 
         <footer className="fixed bottom-0 z-20 w-full border-t md:hidden">
           <div className="flex justify-around py-2 bg-white">
-            {menuItems.map((item, index) => (
+            {mobileMenuItems.map((item, index) => (
               <Link key={index} href={item.href}>
                 <Button variant="light" className="flex flex-col items-center">
                   <item.icon className="w-6 h-6" />

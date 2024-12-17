@@ -142,7 +142,7 @@ export default function HomeScreen() {
         {isSearching ? (
           <div className="p-4">
             {statusSearch === "pending" ? (
-              <p>Loading users...</p>
+              <p>로딩중...</p>
             ) : statusSearch === "error" ? (
               <p>Error: {infiniteErrorSearch.message}</p>
             ) : (

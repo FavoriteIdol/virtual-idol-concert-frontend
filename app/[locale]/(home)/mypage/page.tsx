@@ -26,7 +26,7 @@ export default function MyPage({ params }: MyPageProps) {
   const { id } = params;
   const router = useRouter();
   const t = useTranslations();
-  const { userInfo, setUserInfo } = useUserStore();
+  const { userInfo, setUserInfo, clearUserInfo, hasHydrated } = useUserStore();
   const { isOpen, onOpen, onOpenChange } = useDisclosure();
   const [modalImage, setModalImage] = useState("");
   const [viewHistory, setViewHistory] = useState<any[]>([]);
@@ -53,6 +53,27 @@ export default function MyPage({ params }: MyPageProps) {
     setModalImage(imageUrl);
     onOpen();
   };
+
+  const handleLogout = () => {
+    clearUserInfo();
+    router.push('/login');
+  };
+
+  // hydration이 완료되기 전에는 로딩 상태를 보여줌
+  if (!hasHydrated) {
+    return (
+      <div className="flex flex-col min-h-screen bg-gray-100">
+        <header className="bg-white p-4 sticky top-0 z-10 shadow-sm">
+          <h1 className="text-lg font-bold">{t("내 페이지")}</h1>
+        </header>
+        <main className="flex-grow p-4 space-y-4 pb-16">
+          <div className="flex justify-center items-center h-full">
+            <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-gray-900"></div>
+          </div>
+        </main>
+      </div>
+    );
+  }
 
   return (
     <div className="flex flex-col min-h-screen bg-gray-100">
@@ -87,7 +108,7 @@ export default function MyPage({ params }: MyPageProps) {
               </CardBody>
             </Card>
 
-            {/* 관람 이력 카드 */}
+            {/* 관�� 이력 카드 */}
             <Card>
               <CardBody className="p-4">
                 <h2 className="font-bold text-lg mb-4">{t("관람 이력")}</h2>
@@ -150,9 +171,7 @@ export default function MyPage({ params }: MyPageProps) {
                   {
                     icon: LogOut,
                     label: t("로그아웃"),
-                    onClick: () => {
-                      /* 로그아웃 로직 */
-                    },
+                    onClick: handleLogout,
                   },
                 ].map((item, index) => (
                   <Button
@@ -193,7 +212,7 @@ export default function MyPage({ params }: MyPageProps) {
                     variant="light"
                     onPress={onClose}
                   >
-                    {t("닫기")}
+                    {t("���기")}
                   </Button>
                 </ModalFooter>
               </>

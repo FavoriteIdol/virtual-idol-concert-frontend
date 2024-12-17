@@ -37,6 +37,7 @@ const useUserStore = create<UserStore>()(
           console.log("clearUserInfo called");
           set({ userInfo: null });
           localStorage.removeItem('user-storage');
+          localStorage.removeItem('user-storage-for-virtual');
         },
         setHasHydrated: (state: boolean) => {
           set({ hasHydrated: state });
