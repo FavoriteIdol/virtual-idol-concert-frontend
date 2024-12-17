@@ -214,7 +214,7 @@ const CardItem: React.FC<CardItemProps> = ({
         ctx.globalCompositeOperation = 'destination-in';
         ctx.drawImage(ticketMask, 0, 0, TICKET_WIDTH, TICKET_HEIGHT);
 
-        // 반투명 검은색 오버레이
+        // 반��명 검은색 오버레이
         ctx.globalCompositeOperation = 'source-over';
         ctx.fillStyle = 'rgba(0, 0, 0, 0.7)';
         ctx.fillRect(0, 0, TICKET_WIDTH, TICKET_HEIGHT);
@@ -223,17 +223,19 @@ const CardItem: React.FC<CardItemProps> = ({
         const padding = TICKET_WIDTH * (isMobile() ? 0.03 : 0.04);
         const contentWidth = TICKET_WIDTH - (padding * 2);
         const contentHeight = TICKET_HEIGHT - (padding * 2);
+        
+        // Title 영역 높이 먼저 정의
+        const titleHeight = contentHeight * 0.3;
         const bottomY = padding + titleHeight;
         const remainingHeight = contentHeight - titleHeight;
         const halfWidth = contentWidth / 2;
-        
+
         // 그리드 스타일 설정
         ctx.strokeStyle = 'white';
         ctx.lineWidth = 2;
         ctx.fillStyle = 'white';
 
         // Title 영역 (상단)
-        const titleHeight = contentHeight * 0.3;
         ctx.strokeRect(padding, padding, contentWidth, titleHeight);
         ctx.font = isMobile() ? '24px sans-serif' : '32px sans-serif';
         ctx.textAlign = 'left';
@@ -276,7 +278,7 @@ const CardItem: React.FC<CardItemProps> = ({
       link.click();
 
     } catch (error) {
-      console.error('티켓 캡처 ���패:', error);
+      console.error('티켓 캡처 실패:', error);
     }
   };
 
