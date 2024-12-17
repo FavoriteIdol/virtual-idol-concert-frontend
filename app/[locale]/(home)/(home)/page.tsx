@@ -196,18 +196,15 @@ export default function HomeScreen() {
                       <div className="absolute z-20 top-4 left-4 right-4">
                         <div className="absolute inset-0 bg-black/40 rounded-lg -m-3 p-3" />
                         <div className="relative z-10">
-                          <p className="text-tiny text-white/80 uppercase font-bold">
+                          <p className="text-tiny text-white/80 uppercase font-bold md:text-sm">
                             {new Date(performance.concertDate).toLocaleString(
                               "ko-KR",
                               { dateStyle: "short", timeStyle: "short" }
                             )}
                           </p>
-                          <h4 className="text-white font-medium text-2xl">
+                          <h4 className="text-white font-medium text-lg md:text-2xl">
                             {performance.name}
                           </h4>
-                          <p className="text-sm text-white/80 mt-1">
-                            {performance.concertName}
-                          </p>
                         </div>
                       </div>
                       <div className="relative w-full h-full">
