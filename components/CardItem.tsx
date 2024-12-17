@@ -214,7 +214,7 @@ const CardItem: React.FC<CardItemProps> = ({
         ctx.globalCompositeOperation = 'destination-in';
         ctx.drawImage(ticketMask, 0, 0, TICKET_WIDTH, TICKET_HEIGHT);
 
-        // 반��명 검은색 오버레이
+        // 반 검은색 오버레이
         ctx.globalCompositeOperation = 'source-over';
         ctx.fillStyle = 'rgba(0, 0, 0, 0.7)';
         ctx.fillRect(0, 0, TICKET_WIDTH, TICKET_HEIGHT);
@@ -408,14 +408,14 @@ const CardItem: React.FC<CardItemProps> = ({
                   fontWeight: "bold",
                   fontSize: isSelected 
                     ? (isMobile() 
-                      ? "1.25rem"  // 모바일에서 선택됐을 때 글씨 크기
-                      : "2rem")    // PC에서 선택됐을 때 글씨 크기
-                    : "1.1rem",    // 선택되지 않았을 때 글씨 크기
+                      ? "0.85rem"   // 모바일에서 선택됐을 때 글씨 크기를 0.9rem에서 0.75rem으로 더 줄임
+                      : "2rem")     // PC에서 선택됐을 때 글씨 크기
+                    : "1.1rem",     // 선택되지 않았을 때 글씨 크기
                   lineHeight: isSelected 
                     ? (isMobile() 
-                      ? "1.5rem"   // 모바일에서 선택됐을 때 줄 간격
-                      : "2.0rem")  // PC에서 선택됐을 때 줄 간격
-                    : "1.0rem",    // 선택되지 않았을 때 줄 간격
+                      ? "0.85rem"   // 줄 간격도 글씨 크기와 동일하게 조정
+                      : "2.0rem")   // PC에서 선택됐을 때 줄 간격
+                    : "1.0rem",     // 선택되지 않았을 때 줄 간격
                   letterSpacing: "-0.07em",
                   textShadow: "0 2px 5px rgba(0, 0, 0, 0.5)",
                 }}

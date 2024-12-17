@@ -32,15 +32,17 @@ export interface PaginatedCollection {
 export default function MyPage({ params }: MyPageProps) {
   const router = useRouter();
   const t = useTranslations();
-  const { userInfo, setUserInfo } = useUserStore();
+  const { userInfo } = useUserStore();
   const [collections, setCollections] = useState<CollectionItem[]>([]);
- const [isFlipped, setIsFlipped] = useState(false);
+  const [userName, setUserName] = useState<string>("");
+  
   useEffect(() => {
     const fetchCollections = async () => {
-      if (!params.userId) return; // userId가 없으면 함수 종료
+      if (!params.userId) return;
 
       try {
-        const response = await apiClient.get(
+        // 콜렉션 데이터 가져오기
+        const collectionResponse = await apiClient.get(
           `/collections/user/${params.userId}`,
           {
             params: {
@@ -49,17 +51,31 @@ export default function MyPage({ params }: MyPageProps) {
             },
           }
         );
-        console.log(response.data);
-        setCollections(response.data.content); // 페이지네이션의 content 부분만 상태로 설정
-        // setCollections(dummyData.content);
+        setCollections(collectionResponse.data.content);
+
+        // 항상 콜렉션 소유자의 이름을 가져오기 (본인 콜렉션이 아닐 때만이 아닌)
+        const userResponse = await apiClient.get(`/users/${params.userId}`);
+        setUserName(userResponse.data.userName || "Unknown User");
+        
       } catch (error) {
         console.error("Failed to fetch collections:", error);
       }
     };
 
     fetchCollections();
-  }, [params.userId, setCollections]); // userId가 변경될 때만 useEffect 재실행
+  }, [params.userId]);
 
+  // 제목 표시 로직 수정
+  const getCollectionTitle = () => {
+    if (userInfo?.userId === Number(params.userId)) {
+      return t("내 콜렉션");
+    }
+    
+    // userInfo가 없거나 다른 사용자의 콜렉션인 경우 userName 사용
+    return userName ? `${userName}${t("님의 콜렉션")}` : t("콜렉션");
+  };
+
+  const [isFlipped, setIsFlipped] = useState(false);
   const [selectedImageId, setSelectedImageId] = useState<string | null>(null);
   const [imageStyles, setImageStyles] = useState<{
     [key: string]: CSSProperties;
@@ -147,7 +163,7 @@ export default function MyPage({ params }: MyPageProps) {
                className="p-4"
                style={{ overflow: "visible", position: "relative" }}
              >
-               <h2 className="font-bold text-lg mb-4">{t("콜렉션")}</h2>
+               <h2 className="font-bold text-lg mb-4">{getCollectionTitle()}</h2>
                <div
                  className="flex flex-wrap gap-4 justify-center"
                  style={{
