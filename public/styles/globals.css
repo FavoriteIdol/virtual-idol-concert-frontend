@@ -11,3 +11,15 @@
 }
 @import url('https://cdn.rawgit.com/moonspam/NanumSquare/master/nanumsquare.css');
 
+/* 모든 input 요소에 대해 적용 */
+input, textarea, select {
+  font-size: 16px !important;
+}
+
+/* 또는 모바일에서만 적용 */
+@media (max-width: 768px) {
+  input, textarea, select {
+    font-size: 16px !important;
+  }
+}
+

@@ -151,7 +151,7 @@ export default function HomeScreen() {
                   {page.content.map((result: any) => (
                     <Link
                       key={result.userId}
-                      href={`/collection2/${result.id}`}
+                      href={`/collection/${result.id}`}
                     >
                       <Account
                         className="px-2 py-2"

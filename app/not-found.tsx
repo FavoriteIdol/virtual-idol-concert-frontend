@@ -1,5 +1,7 @@
 // app/not-found.tsx
 
+import { useTranslations } from "next-intl";
+
 export const dynamic = 'force-dynamic';
 
 export default function NotFound() {

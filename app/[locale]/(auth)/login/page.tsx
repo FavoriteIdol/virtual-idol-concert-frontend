@@ -130,6 +130,7 @@ export default function LoginPage() {
                   value={email}
                   onChange={(e) => setEmail(e.target.value)}
                   required
+                  className="text-base"
                 />
               </div>
 
@@ -141,6 +142,7 @@ export default function LoginPage() {
                   value={password}
                   onChange={(e) => setPassword(e.target.value)}
                   required
+                  className="text-base"
                 />
               </div>
               {error && <p className="mt-2 text-red-500">{error}</p>}

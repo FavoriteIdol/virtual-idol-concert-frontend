@@ -21,7 +21,7 @@ export default function Layout({ children }: { children: React.ReactNode }) {
           {
             icon: CreditCard,
             label: t("콜렉션"),
-            href: `/collection2/${userInfo.userId}`,
+            href: `/collection/${userInfo.userId}`,
           },
           { icon: User, label: t("마이페이지"), href: "/mypage" },
         ]
@@ -35,7 +35,7 @@ export default function Layout({ children }: { children: React.ReactNode }) {
           {
             icon: CreditCard,
             label: t("콜렉션"),
-            href: `/collection2/${userInfo.userId}`,
+            href: `/collection/${userInfo.userId}`,
           },
           { icon: User, label: t("마이페이지"), href: "/mypage" },
         ]
