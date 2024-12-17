@@ -151,8 +151,9 @@ export default function MyPage({ params }: MyPageProps) {
                <div
                  className="flex flex-wrap gap-4 justify-center"
                  style={{
-                   overflow: "visible", // CardItem을 포함하는 부모 div의 overflow를 visible로 설정
-                   aspectRatio: "4 / 3", // 카드 리스트 컨테이너 비율 유지
+                   overflow: "visible",
+                   minHeight: "calc(100vh - 200px)",
+                   width: "100%",
                  }}
                >
                  {collections.map((collection) => {
@@ -166,7 +167,8 @@ export default function MyPage({ params }: MyPageProps) {
                          zIndex: isSelected ? 50 : 15, // 선택된 카드만 오버레이 위에 표시
                          position: isSelected ? "relative" : "initial",
                          overflow: "visible", // CardItem을 포함하는 부모 div의 overflow를 visible로 설정
-                         aspectRatio: "4 / 2",
+                         width: "100%",
+                         maxWidth: "500px",
                        }}
                      >
                        <CardItem

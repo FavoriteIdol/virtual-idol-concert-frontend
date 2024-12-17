@@ -214,15 +214,18 @@ const CardItem: React.FC<CardItemProps> = ({
         ctx.globalCompositeOperation = 'destination-in';
         ctx.drawImage(ticketMask, 0, 0, TICKET_WIDTH, TICKET_HEIGHT);
 
-        // 반�� 검은색 오버레이
+        // 반투명 검은색 오버레이
         ctx.globalCompositeOperation = 'source-over';
         ctx.fillStyle = 'rgba(0, 0, 0, 0.7)';
         ctx.fillRect(0, 0, TICKET_WIDTH, TICKET_HEIGHT);
 
         // 그리드 레이아웃 설정
-        const padding = TICKET_WIDTH * 0.04;
+        const padding = TICKET_WIDTH * (isMobile() ? 0.03 : 0.04);
         const contentWidth = TICKET_WIDTH - (padding * 2);
         const contentHeight = TICKET_HEIGHT - (padding * 2);
+        const bottomY = padding + titleHeight;
+        const remainingHeight = contentHeight - titleHeight;
+        const halfWidth = contentWidth / 2;
         
         // 그리드 스타일 설정
         ctx.strokeStyle = 'white';
@@ -232,47 +235,38 @@ const CardItem: React.FC<CardItemProps> = ({
         // Title 영역 (상단)
         const titleHeight = contentHeight * 0.3;
         ctx.strokeRect(padding, padding, contentWidth, titleHeight);
-        ctx.font = '32px sans-serif';
+        ctx.font = isMobile() ? '24px sans-serif' : '32px sans-serif';
         ctx.textAlign = 'left';
-        const titleY = padding + (titleHeight / 2) + 10;  // 세로 중앙 정렬
+        const titleY = padding + (titleHeight / 2) + 10;
         ctx.fillText('Title', padding + 30, titleY);
-        ctx.font = 'bold 40px GangwonEduPowerExtraBoldA';
-        ctx.fillText(collection.concertName, padding + 130, titleY);
-
-        // 하단 영역
-        const bottomY = padding + titleHeight;
-        const remainingHeight = contentHeight - titleHeight;
-        const halfWidth = contentWidth / 2;
+        ctx.font = isMobile() ? 'bold 28px GangwonEduPowerExtraBoldA' : 'bold 40px GangwonEduPowerExtraBoldA';
+        ctx.fillText(collection.concertName, padding + (isMobile() ? 100 : 130), titleY);
 
         // Artist & Audience (왼쪽)
         // Artist (왼쪽 상단)
         ctx.strokeRect(padding, bottomY, halfWidth, remainingHeight / 2);
-        ctx.font = '32px sans-serif';
-        // Artist 레이블
-        ctx.fillText('Artist', padding + 30, bottomY + 50);
-        ctx.font = 'bold 40px GangwonEduPowerExtraBoldA';
-        // Artist 내용 (아래로 정렬)
-        ctx.fillText(collection.artist, padding + 30, bottomY + 100);
+        ctx.font = isMobile() ? '24px sans-serif' : '32px sans-serif';
+        ctx.fillText('Artist', padding + 30, bottomY + (isMobile() ? 40 : 50));
+        ctx.font = isMobile() ? 'bold 28px GangwonEduPowerExtraBoldA' : 'bold 40px GangwonEduPowerExtraBoldA';
+        ctx.fillText(collection.artist, padding + 30, bottomY + (isMobile() ? 80 : 100));
 
         // Audience (왼쪽 하단)
         const audienceY = bottomY + remainingHeight / 2;
         ctx.strokeRect(padding, audienceY, halfWidth, remainingHeight / 2);
-        ctx.font = '32px sans-serif';
-        // Audience 레이블
-        ctx.fillText('Audience', padding + 30, audienceY + 50);
-        ctx.font = 'bold 40px GangwonEduPowerExtraBoldA';
-        // Audience 내용 (아래로 정렬)
-        ctx.fillText(collection.audience, padding + 30, audienceY + 100);
+        ctx.font = isMobile() ? '24px sans-serif' : '32px sans-serif';
+        ctx.fillText('Audience', padding + 30, audienceY + (isMobile() ? 40 : 50));
+        ctx.font = isMobile() ? 'bold 28px GangwonEduPowerExtraBoldA' : 'bold 40px GangwonEduPowerExtraBoldA';
+        ctx.fillText(collection.audience, padding + 30, audienceY + (isMobile() ? 80 : 100));
 
         // Date & Time (오른쪽 전체)
         const rightX = padding + halfWidth;
         ctx.strokeRect(rightX, bottomY, halfWidth, remainingHeight);
-        ctx.font = '32px sans-serif';
-        const dateY = bottomY + (remainingHeight / 2);  // 세로 중앙 정렬
-        ctx.fillText('Date', rightX + 30, dateY - 30);
-        ctx.font = 'bold 40px GangwonEduPowerExtraBoldA';
-        ctx.fillText(concertDate, rightX + 30, dateY + 10);
-        ctx.fillText(concertTime, rightX + 30, dateY + 70);
+        ctx.font = isMobile() ? '24px sans-serif' : '32px sans-serif';
+        const dateY = bottomY + (remainingHeight / 2);
+        ctx.fillText('Date', rightX + 30, dateY - (isMobile() ? 20 : 30));
+        ctx.font = isMobile() ? 'bold 28px GangwonEduPowerExtraBoldA' : 'bold 40px GangwonEduPowerExtraBoldA';
+        ctx.fillText(concertDate, rightX + 30, dateY + (isMobile() ? 8 : 10));
+        ctx.fillText(concertTime, rightX + 30, dateY + (isMobile() ? 50 : 70));
       }
 
       // 이미지 다운로드
@@ -282,7 +276,7 @@ const CardItem: React.FC<CardItemProps> = ({
       link.click();
 
     } catch (error) {
-      console.error('티켓 캡처 실패:', error);
+      console.error('티켓 캡처 ���패:', error);
     }
   };
 
@@ -298,11 +292,19 @@ const CardItem: React.FC<CardItemProps> = ({
     >
       {/* 티켓 캡처 버튼과 뒷면 보기 버튼 */}
       {isSelected && (
-        <div className="absolute bottom-[-10rem] right-[-10rem] flex flex-col gap-2 z-10">
-          <ButtonGroup>
+        <div 
+          className={`absolute flex flex-col gap-2 z-10 ${
+            isMobile()
+              ? "bottom-[-7rem] left-1/2 transform -translate-x-1/2" // 모바일에서 더 아래로 이동 (-4.5rem -> -7rem)
+              : "bottom-[-10rem] right-[-10rem]" // PC에서 기존 위치 유지
+          }`}
+        >
+          <ButtonGroup className={isMobile() ? "gap-2" : ""}>
             <Button
               color="primary"
-              variant="flat"
+              variant={isMobile() ? "solid" : "flat"}
+              size={isMobile() ? "sm" : "md"}
+              className={isMobile() ? "bg-white/90 text-black font-semibold" : ""}
               onClick={(e) => {
                 e.stopPropagation();
                 captureTicket('front');
@@ -312,7 +314,9 @@ const CardItem: React.FC<CardItemProps> = ({
             </Button>
             <Button
               color="primary"
-              variant="flat"
+              variant={isMobile() ? "solid" : "flat"}
+              size={isMobile() ? "sm" : "md"}
+              className={isMobile() ? "bg-white/90 text-black font-semibold" : ""}
               onClick={(e) => {
                 e.stopPropagation();
                 captureTicket('back');
@@ -322,8 +326,13 @@ const CardItem: React.FC<CardItemProps> = ({
             </Button>
           </ButtonGroup>
           <Button
-            variant="light"
-            className="px-4 py-2 rounded bg-blue-400 text-white shadow-md hover:bg-blue-500"
+            variant={isMobile() ? "solid" : "light"}
+            size={isMobile() ? "sm" : "md"}
+            className={
+              isMobile()
+                ? "bg-white/90 text-black font-semibold shadow-md"
+                : "px-4 py-2 rounded bg-blue-400 text-white shadow-md hover:bg-blue-500"
+            }
             onClick={(e) => {
               e.stopPropagation();
               handleFlip();
@@ -339,7 +348,12 @@ const CardItem: React.FC<CardItemProps> = ({
         layoutId={`card-${imageId}`}
         animate={controls}
         style={{
-          width: isSelected ? isMobile() ? "16rem" : "40rem" : isMobile() ? "24rem" : "24rem",
+          width: "100%",
+          maxWidth: isSelected 
+            ? (isMobile() 
+              ? "calc(100vw - 8rem)"  // 모바일에서 선택됐을 때 크기를 더 작게 조정
+              : "40rem") 
+            : "24rem",
           aspectRatio: "7 / 3",
           transformStyle: "preserve-3d",
           pointerEvents: isAnimating ? "none" : "auto",
@@ -390,15 +404,25 @@ const CardItem: React.FC<CardItemProps> = ({
                 style={{
                   color: "white",
                   fontWeight: "bold",
-                  fontSize: isSelected ? "2rem" : "1.1rem",
-                  lineHeight: isSelected ? "2.0rem" : "1.0rem",
+                  fontSize: isSelected 
+                    ? (isMobile() 
+                      ? "1.25rem"  // 모바일에서 선택됐을 때 글씨 크기
+                      : "2rem")    // PC에서 선택됐을 때 글씨 크기
+                    : "1.1rem",    // 선택되지 않았을 때 글씨 크기
+                  lineHeight: isSelected 
+                    ? (isMobile() 
+                      ? "1.5rem"   // 모바일에서 선택됐을 때 줄 간격
+                      : "2.0rem")  // PC에서 선택됐을 때 줄 간격
+                    : "1.0rem",    // 선택되지 않았을 때 줄 간격
                   letterSpacing: "-0.07em",
                   textShadow: "0 2px 5px rgba(0, 0, 0, 0.5)",
                 }}
-                className=" overflow-visible absolute bottom-0 right-5 leading-tight text-stroke overflow-hidden text-ellipsis whitespace-nowrap"
+                className="overflow-visible absolute bottom-0 right-5 leading-tight text-stroke overflow-hidden text-ellipsis whitespace-nowrap"
               >
                 <p>{collection.concertName.split('"')[0]}</p>
-                {collection.concertName.split('"')[1] && <p>"{collection.concertName.split('"')[1]}"</p>}
+                {collection.concertName.split('"')[1] && (
+                  <p>"{collection.concertName.split('"')[1]}"</p>
+                )}
               </div>
             </div>
           </div>
@@ -450,31 +474,31 @@ const CardItem: React.FC<CardItemProps> = ({
                 className="w-full h-full bg-slate-400 rounded-md object-cover"
               />
               <div className="absolute inset-0 bg-black opacity-70 rounded-md"></div>
-              <div className="absolute inset-0 grid grid-rows-3 grid-cols-4 p-6 border-0 rounded-md">
-                <div className="col-span-4 flex items-center justify-start border border-white p-1.5 overflow-hidden text-ellipsis whitespace-nowrap">
-                  <p className="text-white text-sm font-semibold">Title</p>
-                  <p className="text-white text-sm font-bold ml-2 font-GangwonEduPowerExtraBoldA">
+              <div className="absolute inset-0 grid grid-rows-3 grid-cols-4 p-3 border-0 rounded-md">
+                <div className="col-span-4 flex items-center justify-start border border-white p-1 overflow-hidden text-ellipsis whitespace-nowrap">
+                  <p className={`text-white ${isMobile() ? "text-[6px]" : "text-xs"} font-semibold`}>Title</p>
+                  <p className={`text-white ${isMobile() ? "text-[6px]" : "text-xs"} font-bold ml-1 font-GangwonEduPowerExtraBoldA`}>
                     {collection.concertName}
                   </p>
                 </div>
-                <div className="col-span-2 row-span-2 flex flex-col items-start justify-center border border-white p-1.5 overflow-hidden text-ellipsis whitespace-nowrap">
-                  <p className="text-white text-sm font-semibold">Date</p>
-                  <p className="text-white text-sm font-bold font-GangwonEduPowerExtraBoldA">
+                <div className="col-span-2 row-span-2 flex flex-col items-start justify-center border border-white p-1 overflow-hidden text-ellipsis whitespace-nowrap">
+                  <p className={`text-white ${isMobile() ? "text-[6px]" : "text-xs"} font-semibold`}>Date</p>
+                  <p className={`text-white ${isMobile() ? "text-[6px]" : "text-xs"} font-bold font-GangwonEduPowerExtraBoldA`}>
                     {concertDate}
                   </p>
-                  <p className="text-white text-sm font-bold font-GangwonEduPowerExtraBoldA">
+                  <p className={`text-white ${isMobile() ? "text-[6px]" : "text-xs"} font-bold font-GangwonEduPowerExtraBoldA`}>
                     {concertTime}
                   </p>
                 </div>
-                <div className="col-span-2 row-start-2 flex flex-col items-start justify-center border border-white p-1.5 overflow-hidden text-ellipsis whitespace-nowrap">
-                  <p className="text-white text-sm font-semibold">Artist</p>
-                  <p className="text-white text-sm font-bold font-GangwonEduPowerExtraBoldA">
+                <div className="col-span-2 row-start-2 flex flex-col items-start justify-center border border-white p-1 overflow-hidden text-ellipsis whitespace-nowrap">
+                  <p className={`text-white ${isMobile() ? "text-[6px]" : "text-xs"} font-semibold`}>Artist</p>
+                  <p className={`text-white ${isMobile() ? "text-[6px]" : "text-xs"} font-bold font-GangwonEduPowerExtraBoldA`}>
                     {collection.artist}
                   </p>
                 </div>
-                <div className="col-span-2 row-start-3 flex flex-col items-start border border-white justify-center p-1.5 overflow-hidden text-ellipsis whitespace-nowrap">
-                  <p className="text-white text-sm font-semibold">Audience</p>
-                  <p className="text-white text-sm font-bold font-GangwonEduPowerExtraBoldA">
+                <div className="col-span-2 row-start-3 flex flex-col items-start border border-white justify-center p-1 overflow-hidden text-ellipsis whitespace-nowrap">
+                  <p className={`text-white ${isMobile() ? "text-[6px]" : "text-xs"} font-semibold`}>Audience</p>
+                  <p className={`text-white ${isMobile() ? "text-[6px]" : "text-xs"} font-bold font-GangwonEduPowerExtraBoldA`}>
                     {collection.audience}
                   </p>
                 </div>
