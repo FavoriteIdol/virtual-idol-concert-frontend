@@ -18,20 +18,19 @@ export const metadata: Metadata = {
   description: siteConfig.description,
   icons: {
     icon: "/favicon.ico",
-  },
-  viewport: {
-    width: 'device-width',
-    initialScale: 1,
-    maximumScale: 1,
-    userScalable: false,
-  },
+    apple: [
+      { url: "/icons/icon-192x192.png" },
+      { url: "/icons/icon-512x512.png", sizes: "512x512" }
+    ]
+  }
 };
 
 export const viewport: Viewport = {
-  themeColor: [
-    { media: "(prefers-color-scheme: light)", color: "white" },
-    { media: "(prefers-color-scheme: dark)", color: "black" },
-  ],
+  themeColor: '#ffffff',
+  width: 'device-width',
+  initialScale: 1,
+  maximumScale: 1,
+  userScalable: false,
 };
 
 export default async function RootLayout({
@@ -44,23 +43,19 @@ export default async function RootLayout({
   return (
     <html suppressHydrationWarning lang="en">
       <head>
-        <meta 
-          name="viewport" 
-          content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no"
-        />
+        <meta name="application-name" content="Stage On" />
+        <meta name="apple-mobile-web-app-capable" content="yes" />
+        <meta name="apple-mobile-web-app-status-bar-style" content="default" />
+        <meta name="apple-mobile-web-app-title" content="Stage On" />
+        <meta name="mobile-web-app-capable" content="yes" />
+        <meta name="theme-color" content="#ffffff" />
+        <link rel="apple-touch-icon" href="/icons/icon-192x192.png" />
       </head>
-      <body
-        
-      >
+      <body>
         <NextIntlClientProvider messages={messages}>
-
-        <Providers themeProps={{ attribute: "class", defaultTheme: "light" }}>
-          <div >
-            <main >
-              {children}
-            </main>
-          </div>
-        </Providers>
+          <Providers themeProps={{ attribute: "class", defaultTheme: "light" }}>
+            {children}
+          </Providers>
         </NextIntlClientProvider>
       </body>
     </html>

@@ -9,10 +9,12 @@ import TanstackQueryProvider from "@/components/TanstackQueryProvider";
 import useUserStore from "@store/useUserStore";
 import ConcertNavItems from "@/components/nav/ConcertNavItems";
 import CharacterNavItems from "@/components/nav/CharacterNavItems";
+import { useEffect } from 'react';
 
 export default function Layout({ children }: { children: React.ReactNode }) {
   const t = useTranslations();
   const userInfo = useUserStore((state) => state.userInfo);
+
 
   const desktopMenuItems = [
     { icon: Home, label: t("홈"), href: "/" },

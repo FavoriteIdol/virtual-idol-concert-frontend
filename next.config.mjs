@@ -1,16 +1,19 @@
 import createNextIntlPlugin from "next-intl/plugin";
 import { resolve } from 'path';
+import withPWA from '@ducanh2912/next-pwa';
+
+const withNextIntl = createNextIntlPlugin();
 
 /** @type {import('next').NextConfig} */
 const nextConfig = {
   images: {
-    domains: [
-      "nextui.org",
-      "via.placeholder.com",
-      "example.com",
-      "master-of-prediction.shop",
-      "file.reward-factory.shop",
-      "localhost",
+    remotePatterns: [
+      { hostname: "nextui.org" },
+      { hostname: "via.placeholder.com" },
+      { hostname: "example.com" },
+      { hostname: "master-of-prediction.shop" },
+      { hostname: "file.reward-factory.shop" },
+      { hostname: "localhost" },
     ],
   },
   webpack: (config, { isServer }) => {
@@ -26,9 +29,11 @@ const nextConfig = {
       };
     }
     return config;
-  },
+  }
 };
 
-const withNextIntl = createNextIntlPlugin();
-
-export default withNextIntl(nextConfig);
+export default withPWA({
+  dest: 'public',
+  register: true,
+  skipWaiting: true,
+})(withNextIntl(nextConfig));
