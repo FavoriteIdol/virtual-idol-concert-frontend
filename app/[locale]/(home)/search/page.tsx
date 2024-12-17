@@ -11,6 +11,7 @@ import apiClient from '@/handler/fetch/client'
 import Link from 'next/link';
 import { useDebounce } from "@uidotdev/usehooks";
 import { useInView } from 'react-intersection-observer';
+import { useTranslations } from 'next-intl';
 
 
 // Fetch search results
@@ -34,6 +35,7 @@ export default function Page() {
     threshold: 0.5, // 50%가 보일 때 트리거
     triggerOnce: false, // 여러 번 트리거되도록 설정
   });
+  const t = useTranslations();
 
   // 검색 상태와 헤더 상태 토글 함수
   const handleSearchToggle = () => {
@@ -92,12 +94,12 @@ export default function Page() {
       <main className="col-span-5 w-full border-x border-slate-200">
         {/* 검색 상태에 따라 헤더와 검색창 고정 */}
         <div>
-          <Header title="검색" hide={!isHeaderVisible}>
+          <Header title={t("검색")} hide={!isHeaderVisible}>
             <Search  onSearchToggle={handleSearchToggle} onInput={handleSearchInput} />
           </Header>
           {!isHeaderVisible && (
             <div className="p-4 mt-2 w-full flex justify-center items-center">
-              <Search placeholder="사용자 채널을 검색하세요" onSearchToggle={handleSearchToggle} initialIsOpen={!isHeaderVisible} onInput={handleSearchInput} />
+              <Search placeholder={t("사용자_채널을_검색하세요")} onSearchToggle={handleSearchToggle} initialIsOpen={!isHeaderVisible} onInput={handleSearchInput} />
             </div>
           )}
         </div>
@@ -172,7 +174,7 @@ export default function Page() {
         
             
 {statusSearch === 'pending' ? (
-                    <p>로딩중...</p>
+                    <p>{t("로딩중")}</p>
                   ) : statusSearch === 'error' ?  <p>Error: {infiniteErrorSearch.message}</p>: 
                  (
 

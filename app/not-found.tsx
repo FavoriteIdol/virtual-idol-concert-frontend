@@ -3,5 +3,6 @@
 export const dynamic = 'force-dynamic';
 
 export default function NotFound() {
-  return <h1>페이지를 찾을 수 없습니다.</h1>;
+  const t = useTranslations();
+  return <h1>{t("페이지를_찾을_수_없습니다")}</h1>;
 }

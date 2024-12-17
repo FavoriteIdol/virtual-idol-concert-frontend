@@ -11,8 +11,11 @@ import axios from "axios";
 import { useRouter } from "next/navigation";
 import { NextApiRequest, NextApiResponse } from "next";
 import apiClient from "@handler/fetch/client";
+import { useTranslations } from "next-intl";
+
 export default function LoginPage() {
-  
+  const t = useTranslations();
+
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [error, setError] = useState<String | null>(null);
@@ -120,9 +123,9 @@ export default function LoginPage() {
                 <Input
                   isRequired
                   type="email"
-                  label="Email"
+                  label={t("이메일")}
                   autoFocus
-                  errorMessage="Please enter a valid email"
+                  errorMessage={t("올바른_이메일을_입력해주세요")}
                   autoComplete="on"
                   value={email}
                   onChange={(e) => setEmail(e.target.value)}
@@ -133,7 +136,7 @@ export default function LoginPage() {
               <div className="mt-4">
                 <Input
                   isRequired
-                  label="password"
+                  label={t("비밀번호")}
                   type="password"
                   value={password}
                   onChange={(e) => setPassword(e.target.value)}
@@ -146,7 +149,7 @@ export default function LoginPage() {
                   href="#"
                   className="text-sm font-semibold text-gray-700 hover:text-blue-700 focus:text-blue-700"
                 >
-                  Forgot Password?
+                  {t("비밀번호를_잊으셨나요")}
                 </Link>
               </div>
 
@@ -161,12 +164,12 @@ export default function LoginPage() {
             <hr className="w-full my-6 border-gray-300" />
 
             <p className="mt-8">
-              Need an account?
+              {t("계정이_필요하신가요")}{" "}
               <Link
                 href="/signin"
                 className="font-semibold text-blue-500 hover:text-blue-700"
               >
-                Create an account
+                {t("계정_만들기")}
               </Link>
             </p>
 
